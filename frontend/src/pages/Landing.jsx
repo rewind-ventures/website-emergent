@@ -154,24 +154,50 @@ export default function Landing() {
   });
 
   const onSubmit = async (values) => {
-    const payload = {
+    const localPayload = {
       ...values,
       id: generateId(),
       createdAt: new Date().toISOString(),
       source: "landing_form",
     };
 
-    const next = saveLead(payload);
-    setLeads(next);
-    form.reset();
+    try {
+      const res = await axios.post(`${API}/leads`, {
+        name: values.name,
+        company: values.company,
+        email: values.email,
+        phone: values.phone || null,
+        need: values.need,
+        source: "landing_form",
+      });
 
-    toast.success("Request received", {
-      description: "Saved locally for now (MOCK). We can wire this to the backend next.",
-    });
+      const created = {
+        ...res.data,
+        createdAt: res.data.created_at || res.data.createdAt,
+      };
 
-    window.setTimeout(() => {
-      scrollToId("proposalForm");
-    }, 40);
+      setLeads((prev) => [created, ...prev].slice(0, 6));
+      setLeadsSource("api");
+
+      toast.success("Request received", {
+        description: "Submitted successfully. We'll get back to you shortly.",
+      });
+    } catch (e) {
+      // Fallback to localStorage if backend is unreachable
+      const next = saveLead(localPayload);
+      setLeads(next);
+      setLeadsSource("local");
+
+      toast.message("Saved locally", {
+        description:
+          "Backend unavailable, so we saved this in your browser (MOCK fallback).",
+      });
+    } finally {
+      form.reset();
+      window.setTimeout(() => {
+        scrollToId("proposalForm");
+      }, 40);
+    }
   };
 
   return (
