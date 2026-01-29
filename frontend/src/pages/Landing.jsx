@@ -159,6 +159,7 @@ export default function Landing() {
         // Keep localStorage leads as fallback
         if (!mounted) return;
         setLeadsSource("local");
+        setLeads(loadLocalLeads().slice(0, 6));
       } finally {
         if (mounted) setIsLoadingLeads(false);
       }
