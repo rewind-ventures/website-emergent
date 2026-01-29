@@ -766,8 +766,11 @@ export default function Landing() {
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Recent inquiries</CardTitle>
                   <CardDescription className="rv-cardDesc">
-                    Stored in your browser only (MOCK). Handy for reviewing the
-                    flow.
+                    {isLoadingLeads
+                      ? "Loading recent inquiries…"
+                      : leadsSource === "api"
+                        ? "Pulled from the backend."
+                        : "Showing your browser-saved inquiries (MOCK fallback)."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
