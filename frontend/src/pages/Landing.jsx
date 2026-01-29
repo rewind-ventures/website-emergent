@@ -104,7 +104,7 @@ function generateId() {
 
 export default function Landing() {
   const ready = useInViewAnimation();
-  const [leads, setLeads] = useState(() => loadLeads());
+  const [leads, setLeads] = useState([]);
   const [leadsSource, setLeadsSource] = useState("local");
   const [isLoadingLeads, setIsLoadingLeads] = useState(false);
 
