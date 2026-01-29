@@ -111,6 +111,14 @@ export default function Landing() {
   const form = useForm({
     resolver: zodResolver(leadSchema),
     defaultValues: {
+      name: "",
+      company: "",
+      email: "",
+      phone: "",
+      need: "",
+    },
+    mode: "onTouched",
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -142,15 +150,6 @@ export default function Landing() {
       mounted = false;
     };
   }, []);
-
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      need: "",
-    },
-    mode: "onTouched",
-  });
 
   const onSubmit = async (values) => {
     const localPayload = {
