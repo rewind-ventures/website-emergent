@@ -201,8 +201,8 @@ export default function Landing() {
       });
     } catch (e) {
       // Fallback to localStorage if backend is unreachable
-      const next = saveLead(localPayload);
-      setLeads(next);
+      const next = saveLocalLead(localPayload);
+      setLeads(next.slice(0, 6));
       setLeadsSource("local");
 
       toast.message("Saved locally", {
