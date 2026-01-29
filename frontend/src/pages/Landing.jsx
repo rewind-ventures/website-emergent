@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import axios from "axios";
 
-import { MOCK, loadLeads, saveLead } from "@/mock";
+import { MOCK } from "@/mock";
 
 import { Button } from "@/components/ui/button";
 import {
