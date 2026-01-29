@@ -785,7 +785,7 @@ export default function Landing() {
                           <div className="rv-leadTop">
                             <div className="rv-leadName">{l.name}</div>
                             <div className="rv-leadMeta">
-                              {new Date(l.createdAt).toLocaleString()}
+                              {new Date(l.createdAt || l.created_at || Date.now()).toLocaleString()}
                             </div>
                           </div>
                           <div className="rv-leadCompany">{l.company}</div>
