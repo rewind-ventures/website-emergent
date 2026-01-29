@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Query
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ReturnDocument
 import os
 import logging
 from pathlib import Path
@@ -96,7 +97,7 @@ async def update_lead(lead_id: str, input: LeadUpdate):
         {"id": lead_id},
         {"$set": {"status": input.status}},
         projection={"_id": 0},
-        return_document=True,
+        return_document=ReturnDocument.AFTER,
     )
 
     if not res:
