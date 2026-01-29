@@ -66,6 +66,55 @@ class Lead(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+
+@api_router.post("/leads", response_model=Lead)
+async def create_lead(input: LeadCreate):
+    lead = Lead(**input.model_dump())
+
+    doc = lead.model_dump()
+    doc["created_at"] = doc["created_at"].isoformat()
+
+    # Ensure uniqueness by our business id
+    await db.leads.update_one({"id": doc["id"]}, {"$setOnInsert": doc}, upsert=True)
+    return lead
+
+
+@api_router.get("/leads", response_model=List[Lead])
+async def list_leads(limit: int = Query(default=25, ge=1, le=100)):
+    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
+
+    for l in leads:
+        if isinstance(l.get("created_at"), str):
+            l["created_at"] = datetime.fromisoformat(l["created_at"])
+
+    return leads
+
+
+@api_router.patch("/leads/{lead_id}", response_model=Lead)
+async def update_lead(lead_id: str, input: LeadUpdate):
+    res = await db.leads.find_one_and_update(
+        {"id": lead_id},
+        {"$set": {"status": input.status}},
+        projection={"_id": 0},
+        return_document=True,
+    )
+
+    if not res:
+        raise HTTPException(status_code=404, detail="Lead not found")
+
+    if isinstance(res.get("created_at"), str):
+        res["created_at"] = datetime.fromisoformat(res["created_at"])
+
+    return res
+
+
+@api_router.delete("/leads/{lead_id}")
+async def delete_lead(lead_id: str):
+    res = await db.leads.delete_one({"id": lead_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Lead not found")
+    return {"ok": True}
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
