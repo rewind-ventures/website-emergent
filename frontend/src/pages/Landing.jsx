@@ -48,12 +48,11 @@ import {
   ShieldCheck,
   Workflow,
   Sparkles,
+  RotateCcw,
+} from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-
-  RotateCcw,
-} from "lucide-react";
 
 const leadSchema = z.object({
   name: z.string().min(2, "Please enter your name"),
