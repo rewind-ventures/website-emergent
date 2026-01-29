@@ -112,6 +112,38 @@ export default function Landing() {
   const form = useForm({
     resolver: zodResolver(leadSchema),
     defaultValues: {
+
+  useEffect(() => {
+    let mounted = true;
+    const run = async () => {
+      if (!API || API.includes("undefined")) return;
+      setIsLoadingLeads(true);
+      try {
+        const res = await axios.get(`${API}/leads`, { params: { limit: 6 } });
+        if (!mounted) return;
+        setLeadsSource("api");
+        const normalized = Array.isArray(res.data)
+          ? res.data.map((l) => ({
+              ...l,
+              createdAt: l.created_at || l.createdAt,
+            }))
+          : [];
+        setLeads(normalized);
+      } catch (e) {
+        // Keep localStorage leads as fallback
+        if (!mounted) return;
+        setLeadsSource("local");
+      } finally {
+        if (mounted) setIsLoadingLeads(false);
+      }
+    };
+
+    run();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
       name: "",
       company: "",
       email: "",
