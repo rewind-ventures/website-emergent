@@ -101,3 +101,48 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Build a modern, high-engagement website for Rewind Ventures (sports infrastructure & technology setup/management). Then integrate backend to capture proposal requests and list recent inquiries. Calendly URL remains placeholder for now."
+
+backend:
+  - task: "Lead capture API (create/list/update/delete)"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Planned per /app/contracts.md. Not implemented yet."
+
+frontend:
+  - task: "Landing page UI (services tabs, FAQ accordion, contact form)"
+    implemented: true
+    working: true
+    file: "frontend/src/pages/Landing.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Frontend landing page implemented. Contact form currently MOCKED via localStorage; to be replaced with backend API integration."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Lead capture API (create/list/update/delete)"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "User requested proceeding with backend integration. Created /app/contracts.md with API contracts for leads. Next: implement /api/leads endpoints in FastAPI + MongoDB and integrate frontend to replace localStorage lead saving." 
