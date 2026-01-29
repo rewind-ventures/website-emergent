@@ -134,9 +134,6 @@ export default function Landing() {
       email: "",
       phone: "",
 
-    // Immediate fallback load for fast paint
-    setLeads(loadLocalLeads().slice(0, 6));
-
       need: "",
     },
     mode: "onTouched",
