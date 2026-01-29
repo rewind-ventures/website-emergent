@@ -82,6 +82,21 @@ const ServiceIcon = ({ id }) => {
   return <Code2 {...iconProps} />;
 };
 
+const ServiceTabIcon = ({ id }) => (
+  <span className="rv-tabIcon" aria-hidden>
+    <ServiceIcon id={id} />
+  </span>
+);
+
+function generateId() {
+  try {
+    if (crypto?.randomUUID) return crypto.randomUUID();
+  } catch {
+    // ignore
+  }
+  return `lead_${Math.random().toString(16).slice(2)}_${Math.random().toString(16).slice(2)}`;
+}
+
 export default function Landing() {
   const ready = useInViewAnimation();
   const [leads, setLeads] = useState(() => loadLeads());
@@ -99,17 +114,10 @@ export default function Landing() {
     mode: "onTouched",
   });
 
-  const serviceTabs = useMemo(() => {
-    return MOCK.services.map((s) => ({
-      ...s,
-      Icon: () => <ServiceIcon id={s.id} />,
-    }));
-  }, []);
-
   const onSubmit = async (values) => {
     const payload = {
       ...values,
-      id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      id: generateId(),
       createdAt: new Date().toISOString(),
       source: "landing_form",
     };
