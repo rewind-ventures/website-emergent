@@ -119,7 +119,7 @@ export const MOCK = {
   imagery: {
     // Inline images only (NOT background). Sources provided by the image selection agent.
     heroPrimary:
-      "https://images.pexels.com/photos/29439367/pexels-photo-29439367.jpeg",
+      "https://images.unsplash.com/photo-1761644658016-324918bc373c",
     heroSecondary:
       "https://images.unsplash.com/photo-1559369064-c4d65141e408",
     techAccent:
