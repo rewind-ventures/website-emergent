@@ -106,7 +106,7 @@ user_problem_statement: "Build a modern, high-engagement website for Rewind Vent
 
 backend:
   - task: "Lead capture API (create/list/update/delete)"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
@@ -115,7 +115,7 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Planned per /app/contracts.md. Not implemented yet."
+        comment: "Implemented /api/leads: POST create, GET list (limit), PATCH status, DELETE. Uses MongoDB collection leads with business id and ISO created_at. Needs testing."
 
 frontend:
   - task: "Landing page UI (services tabs, FAQ accordion, contact form)"
