@@ -54,14 +54,6 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const leadSchema = z.object({
-  name: z.string().min(2, "Please enter your name"),
-  company: z.string().min(2, "Please enter your company / venue name"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().optional(),
-  need: z
-    .string()
-
 function loadLocalLeads() {
   try {
     const raw = localStorage.getItem("rewind_leads_v1");
@@ -80,6 +72,13 @@ function saveLocalLead(lead) {
   return next;
 }
 
+const leadSchema = z.object({
+  name: z.string().min(2, "Please enter your name"),
+  company: z.string().min(2, "Please enter your company / venue name"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().optional(),
+  need: z
+    .string()
     .min(10, "Tell us a little more (at least 10 characters)")
     .max(1200, "Please keep it under 1200 characters"),
 });
