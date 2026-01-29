@@ -798,7 +798,9 @@ export default function Landing() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {leads.length === 0 ? (
+                  {isLoadingLeads ? (
+                    <div className="rv-empty">Loading…</div>
+                  ) : leads.length === 0 ? (
                     <div className="rv-empty">
                       No form submissions yet. Send one to see it appear here.
                     </div>
