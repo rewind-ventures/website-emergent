@@ -131,7 +131,7 @@ frontend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Frontend landing page implemented. Contact form currently MOCKED via localStorage; to be replaced with backend API integration."
+        comment: "Frontend landing page implemented. Integrated contact form with backend /api/leads (POST) and recent inquiries with GET /api/leads?limit=6. Includes localStorage fallback if backend unavailable."
 
 metadata:
   created_by: "main_agent"
