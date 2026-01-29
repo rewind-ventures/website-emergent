@@ -319,22 +319,20 @@ export default function Landing() {
               </p>
             </div>
 
-            <Tabs defaultValue={serviceTabs[0]?.id} className="rv-tabs">
+            <Tabs defaultValue={MOCK.services[0]?.id} className="rv-tabs">
               <TabsList className="rv-tabsList">
-                {serviceTabs.map((s) => (
+                {MOCK.services.map((s) => (
                   <TabsTrigger
                     key={s.id}
                     value={s.id}
                     className="rv-tabsTrigger">
-                    <span className="rv-tabIcon" aria-hidden>
-                      <s.Icon />
-                    </span>
+                    <ServiceTabIcon id={s.id} />
                     {s.title}
                   </TabsTrigger>
                 ))}
               </TabsList>
 
-              {serviceTabs.map((s) => (
+              {MOCK.services.map((s) => (
                 <TabsContent key={s.id} value={s.id} className="rv-tabsContent">
                   <div className="rv-grid2">
                     <Card className="rv-card">
