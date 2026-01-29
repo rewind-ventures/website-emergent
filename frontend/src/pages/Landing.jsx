@@ -660,8 +660,7 @@ export default function Landing() {
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Request a proposal</CardTitle>
                   <CardDescription className="rv-cardDesc">
-                    This form is saved locally for now (MOCK). We can connect it to
-                    the backend next.
+                    Tell us what you're building — we'll respond via email within 1–2 business days.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
