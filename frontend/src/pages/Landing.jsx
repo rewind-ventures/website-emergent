@@ -106,6 +106,8 @@ function generateId() {
 export default function Landing() {
   const ready = useInViewAnimation();
   const [leads, setLeads] = useState(() => loadLeads());
+  const [leadsSource, setLeadsSource] = useState("local");
+  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(leadSchema),
