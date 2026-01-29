@@ -121,7 +121,7 @@ export const MOCK = {
     heroPrimary:
       "https://images.unsplash.com/photo-1761644658016-324918bc373c",
     heroSecondary:
-      "https://images.unsplash.com/photo-1559369064-c4d65141e408",
+      "https://images.unsplash.com/photo-1764906295307-a541927382b1",
     techAccent:
       "https://images.unsplash.com/photo-1760037028485-d00dd2b8f6f0",
   },
