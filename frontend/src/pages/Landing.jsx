@@ -13,8 +13,8 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardTitle } from
+"@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -26,14 +26,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
+  FormDescription } from
+"@/components/ui/form";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+  AccordionTrigger } from
+"@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Toaster, toast } from "@/components/ui/sonner";
@@ -48,8 +48,8 @@ import {
   ShieldCheck,
   Workflow,
   Sparkles,
-  RotateCcw,
-} from "lucide-react";
+  RotateCcw } from
+"lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -77,10 +77,10 @@ const leadSchema = z.object({
   company: z.string().min(2, "Please enter your company / venue name"),
   email: z.string().email("Please enter a valid email"),
   phone: z.string().optional(),
-  need: z
-    .string()
-    .min(10, "Tell us a little more (at least 10 characters)")
-    .max(1200, "Please keep it under 1200 characters"),
+  need: z.
+  string().
+  min(10, "Tell us a little more (at least 10 characters)").
+  max(1200, "Please keep it under 1200 characters")
 });
 
 function scrollToId(id) {
@@ -105,19 +105,19 @@ const ServiceIcon = ({ id }) => {
   return <Code2 {...iconProps} />;
 };
 
-const ServiceTabIcon = ({ id }) => (
-  <span className="rv-tabIcon" aria-hidden>
+const ServiceTabIcon = ({ id }) =>
+<span className="rv-tabIcon" aria-hidden>
     <ServiceIcon id={id} />
-  </span>
-);
+  </span>;
+
 
 function generateId() {
   try {
     if (crypto?.randomUUID) return crypto.randomUUID();
   } catch {
+
     // ignore
-  }
-  return `lead_${Math.random().toString(16).slice(2)}_${Math.random().toString(16).slice(2)}`;
+  }return `lead_${Math.random().toString(16).slice(2)}_${Math.random().toString(16).slice(2)}`;
 }
 
 export default function Landing() {
@@ -140,9 +140,9 @@ export default function Landing() {
       email: "",
       phone: "",
 
-      need: "",
+      need: ""
     },
-    mode: "onTouched",
+    mode: "onTouched"
   });
 
   useEffect(() => {
@@ -154,12 +154,12 @@ export default function Landing() {
         const res = await axios.get(`${API}/leads`, { params: { limit: 6 } });
         if (!mounted) return;
         setLeadsSource("api");
-        const normalized = Array.isArray(res.data)
-          ? res.data.map((l) => ({
-              ...l,
-              createdAt: l.created_at || l.createdAt,
-            }))
-          : [];
+        const normalized = Array.isArray(res.data) ?
+        res.data.map((l) => ({
+          ...l,
+          createdAt: l.created_at || l.createdAt
+        })) :
+        [];
         setLeads(normalized);
       } catch (e) {
         // Keep localStorage leads as fallback
@@ -182,7 +182,7 @@ export default function Landing() {
       ...values,
       id: generateId(),
       createdAt: new Date().toISOString(),
-      source: "landing_form",
+      source: "landing_form"
     };
 
     try {
@@ -192,19 +192,19 @@ export default function Landing() {
         email: values.email,
         phone: values.phone || null,
         need: values.need,
-        source: "landing_form",
+        source: "landing_form"
       });
 
       const created = {
         ...res.data,
-        createdAt: res.data.created_at || res.data.createdAt,
+        createdAt: res.data.created_at || res.data.createdAt
       };
 
       setLeads((prev) => [created, ...prev].slice(0, 6));
       setLeadsSource("api");
 
       toast.success("Request received", {
-        description: "Submitted successfully. We'll get back to you shortly.",
+        description: "Submitted successfully. We'll get back to you shortly."
       });
     } catch (e) {
       // Fallback to localStorage if backend is unreachable
@@ -214,7 +214,7 @@ export default function Landing() {
 
       toast.message("Saved locally", {
         description:
-          "Backend unavailable, so we saved this in your browser (MOCK fallback).",
+        "Backend unavailable, so we saved this in your browser (MOCK fallback)."
       });
     } finally {
       form.reset();
@@ -246,18 +246,18 @@ export default function Landing() {
             </a>
 
             <nav className="rv-nav">
-              {MOCK.nav.map((n) => (
-                <a
-                  key={n.id}
-                  href={`#${n.id}`}
-                  className="rv-navLink"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToId(n.id);
-                  }}>
+              {MOCK.nav.map((n) =>
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                className="rv-navLink"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToId(n.id);
+                }}>
                   {n.label}
                 </a>
-              ))}
+              )}
             </nav>
 
             <div className="rv-navCtas">
@@ -287,22 +287,22 @@ export default function Landing() {
           <div className="rv-container">
             <div className="rv-heroGrid">
               <div className={`rv-heroCopy ${ready ? "rv-in" : ""}`}>
-                <Badge className="rv-pill" variant="secondary">
-                  Sports infrastructure + technology delivery
+                <Badge className="inline-flex items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 rv-pill !font-semibold !text-xs px-2.5 py-0.5 rounded-md text-secondary-foreground bg-secondary" variant="secondary">Sports infrastructure + Tech Stack
+
                 </Badge>
 
                 <h1 className="rv-display">{MOCK.hero.headline}</h1>
                 <p className="rv-bodyLead">{MOCK.hero.subhead}</p>
 
                 <div className="rv-heroBullets">
-                  {MOCK.hero.bullets.map((b) => (
-                    <div key={b} className="rv-bullet">
+                  {MOCK.hero.bullets.map((b) =>
+                  <div key={b} className="rv-bullet">
                       <span className="rv-bulletIcon" aria-hidden>
                         <ShieldCheck className="h-4 w-4" />
                       </span>
                       <span className="rv-bulletText">{b}</span>
                     </div>
-                  ))}
+                  )}
                 </div>
 
                 <div className="rv-heroActions">
@@ -324,22 +324,22 @@ export default function Landing() {
                   </Button>
 
                   <Button
-                    className="rv-btn rv-btnGhost"
+                    className="inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 rv-btn rv-btnGhost !font-medium !text-sm gap-2 px-4 py-2 rounded-md"
                     variant="ghost"
-                    onClick={() => (window.location.href = `mailto:${MOCK.brand.email}`)}
+                    onClick={() => window.location.href = `mailto:${MOCK.brand.email}`}
                     type="button">
-                    Contact us
+                    Contact Us
                     <Mail className="h-4 w-4" />
                   </Button>
                 </div>
 
                 <div className="rv-miniProof" aria-label="Highlights">
-                  {MOCK.stats.map((s) => (
-                    <div key={s.v} className="rv-miniStat">
+                  {MOCK.stats.map((s) =>
+                  <div key={s.v} className="rv-miniStat">
                       <div className="rv-miniK">{s.k}</div>
                       <div className="rv-miniV">{s.v}</div>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
 
@@ -409,19 +409,19 @@ export default function Landing() {
 
             <Tabs defaultValue={MOCK.services[0]?.id} className="rv-tabs">
               <TabsList className="rv-tabsList">
-                {MOCK.services.map((s) => (
-                  <TabsTrigger
-                    key={s.id}
-                    value={s.id}
-                    className="rv-tabsTrigger">
+                {MOCK.services.map((s) =>
+                <TabsTrigger
+                  key={s.id}
+                  value={s.id}
+                  className="rv-tabsTrigger">
                     <ServiceTabIcon id={s.id} />
                     {s.title}
                   </TabsTrigger>
-                ))}
+                )}
               </TabsList>
 
-              {MOCK.services.map((s) => (
-                <TabsContent key={s.id} value={s.id} className="rv-tabsContent">
+              {MOCK.services.map((s) =>
+              <TabsContent key={s.id} value={s.id} className="rv-tabsContent">
                   <div className="rv-grid2">
                     <Card className="rv-card">
                       <CardHeader>
@@ -432,29 +432,29 @@ export default function Landing() {
                       </CardHeader>
                       <CardContent>
                         <div className="rv-list">
-                          {s.bullets.map((b) => (
-                            <div key={b} className="rv-listItem">
+                          {s.bullets.map((b) =>
+                        <div key={b} className="rv-listItem">
                               <span className="rv-listIcon" aria-hidden>
                                 <Sparkles className="h-4 w-4" />
                               </span>
                               <span>{b}</span>
                             </div>
-                          ))}
+                        )}
                         </div>
                         <Separator className="rv-sep" />
                         <div className="rv-inlineCtas">
                           <Button
-                            className="rv-btn rv-btnPrimary"
-                            onClick={() => scrollToId("contact")}
-                            type="button">
+                          className="rv-btn rv-btnPrimary"
+                          onClick={() => scrollToId("contact")}
+                          type="button">
                             Get a proposal
                             <ArrowRight className="h-4 w-4" />
                           </Button>
                           <Button
-                            className="rv-btn rv-btnSecondary"
-                            variant="outline"
-                            onClick={() => window.open(MOCK.brand.calendlyUrl, "_blank")}
-                            type="button">
+                          className="rv-btn rv-btnSecondary"
+                          variant="outline"
+                          onClick={() => window.open(MOCK.brand.calendlyUrl, "_blank")}
+                          type="button">
                             Book a consultation
                             <Calendar className="h-4 w-4" />
                           </Button>
@@ -471,30 +471,30 @@ export default function Landing() {
                       </CardHeader>
                       <CardContent>
                         <div className="rv-outcomes">
-                          {MOCK.outcomes.map((o) => (
-                            <div key={o.title} className="rv-outcome">
+                          {MOCK.outcomes.map((o) =>
+                        <div key={o.title} className="rv-outcome">
                               <div className="rv-outcomeTop">
                                 <Workflow className="h-4 w-4" aria-hidden />
                                 <div className="rv-outcomeTitle">{o.title}</div>
                               </div>
                               <div className="rv-outcomeDesc">{o.desc}</div>
                             </div>
-                          ))}
+                        )}
                         </div>
 
                         <div className="rv-techAccent">
                           <AspectRatio ratio={21 / 9}>
                             <img
-                              src={MOCK.imagery.techAccent}
-                              alt="Technology brand aesthetic"
-                              className="rv-img" />
+                            src={MOCK.imagery.techAccent}
+                            alt="Technology brand aesthetic"
+                            className="rv-img" />
                           </AspectRatio>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
                 </TabsContent>
-              ))}
+              )}
             </Tabs>
           </div>
         </section>
@@ -575,12 +575,12 @@ export default function Landing() {
                 </CardHeader>
                 <CardContent>
                   <div className="rv-stats">
-                    {MOCK.stats.map((s) => (
-                      <div key={s.v} className="rv-stat">
+                    {MOCK.stats.map((s) =>
+                    <div key={s.v} className="rv-stat">
                         <div className="rv-statK">{s.k}</div>
                         <div className="rv-statV">{s.v}</div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -625,15 +625,15 @@ export default function Landing() {
                 </CardHeader>
                 <CardContent>
                   <div className="rv-testimonials">
-                    {MOCK.testimonials.map((t) => (
-                      <div key={t.quote} className="rv-quote">
+                    {MOCK.testimonials.map((t) =>
+                    <div key={t.quote} className="rv-quote">
                         <div className="rv-quoteText">“{t.quote}”</div>
                         <div className="rv-quoteBy">
                           <span className="rv-quoteName">{t.name}</span>
                           <span className="rv-quoteRole">{t.role}</span>
                         </div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -652,8 +652,8 @@ export default function Landing() {
             <Card className="rv-card rv-glass">
               <CardContent className="rv-faq">
                 <Accordion type="single" collapsible className="rv-accordion">
-                  {MOCK.faqs.map((f, idx) => (
-                    <AccordionItem key={f.q} value={`i-${idx}`} className="rv-accItem">
+                  {MOCK.faqs.map((f, idx) =>
+                  <AccordionItem key={f.q} value={`i-${idx}`} className="rv-accItem">
                       <AccordionTrigger className="rv-accTrigger">
                         {f.q}
                       </AccordionTrigger>
@@ -661,7 +661,7 @@ export default function Landing() {
                         {f.a}
                       </AccordionContent>
                     </AccordionItem>
-                  ))}
+                  )}
                 </Accordion>
               </CardContent>
             </Card>
@@ -696,49 +696,49 @@ export default function Landing() {
                         <FormField
                           control={form.control}
                           name="name"
-                          render={({ field }) => (
-                            <FormItem>
+                          render={({ field }) =>
+                          <FormItem>
                               <FormLabel>Your name</FormLabel>
                               <FormControl>
                                 <Input placeholder="Name" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
-                          )} />
+                          } />
 
                         <FormField
                           control={form.control}
                           name="company"
-                          render={({ field }) => (
-                            <FormItem>
+                          render={({ field }) =>
+                          <FormItem>
                               <FormLabel>Company / venue</FormLabel>
                               <FormControl>
                                 <Input placeholder="Venue name" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
-                          )} />
+                          } />
                       </div>
 
                       <div className="rv-formGrid">
                         <FormField
                           control={form.control}
                           name="email"
-                          render={({ field }) => (
-                            <FormItem>
+                          render={({ field }) =>
+                          <FormItem>
                               <FormLabel>Email</FormLabel>
                               <FormControl>
                                 <Input placeholder="you@company.com" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
-                          )} />
+                          } />
 
                         <FormField
                           control={form.control}
                           name="phone"
-                          render={({ field }) => (
-                            <FormItem>
+                          render={({ field }) =>
+                          <FormItem>
                               <FormLabel>Phone (optional)</FormLabel>
                               <FormControl>
                                 <Input placeholder="+91 …" {...field} />
@@ -748,24 +748,24 @@ export default function Landing() {
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
-                          )} />
+                          } />
                       </div>
 
                       <FormField
                         control={form.control}
                         name="need"
-                        render={({ field }) => (
-                          <FormItem>
+                        render={({ field }) =>
+                        <FormItem>
                             <FormLabel>What are you building?</FormLabel>
                             <FormControl>
                               <Textarea
-                                placeholder="E.g., 6-court pickleball venue — need booking + tournaments + rating integration, and go-live ops support"
-                                className="rv-textarea"
-                                {...field} />
+                              placeholder="E.g., 6-court pickleball venue — need booking + tournaments + rating integration, and go-live ops support"
+                              className="rv-textarea"
+                              {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
-                        )} />
+                        } />
 
                       <div className="rv-formActions">
                         <Button className="rv-btn rv-btnPrimary rv-btnCta" type="submit">
@@ -776,7 +776,7 @@ export default function Landing() {
                           className="rv-btn rv-btnSecondary"
                           variant="outline"
                           type="button"
-                          onClick={() => (window.location.href = `mailto:${MOCK.brand.email}`)}>
+                          onClick={() => window.location.href = `mailto:${MOCK.brand.email}`}>
                           Email instead
                           <Mail className="h-4 w-4" />
                         </Button>
@@ -790,24 +790,24 @@ export default function Landing() {
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Recent inquiries</CardTitle>
                   <CardDescription className="rv-cardDesc">
-                    {isLoadingLeads
-                      ? "Loading recent inquiries…"
-                      : leadsSource === "api"
-                        ? "Pulled from the backend."
-                        : "Showing your browser-saved inquiries (MOCK fallback)."}
+                    {isLoadingLeads ?
+                    "Loading recent inquiries…" :
+                    leadsSource === "api" ?
+                    "Pulled from the backend." :
+                    "Showing your browser-saved inquiries (MOCK fallback)."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {isLoadingLeads ? (
-                    <div className="rv-empty">Loading…</div>
-                  ) : leads.length === 0 ? (
-                    <div className="rv-empty">
+                  {isLoadingLeads ?
+                  <div className="rv-empty">Loading…</div> :
+                  leads.length === 0 ?
+                  <div className="rv-empty">
                       No form submissions yet. Send one to see it appear here.
-                    </div>
-                  ) : (
-                    <div className="rv-leads">
-                      {leads.slice(0, 6).map((l) => (
-                        <div key={l.id} className="rv-lead">
+                    </div> :
+
+                  <div className="rv-leads">
+                      {leads.slice(0, 6).map((l) =>
+                    <div key={l.id} className="rv-lead">
                           <div className="rv-leadTop">
                             <div className="rv-leadName">{l.name}</div>
                             <div className="rv-leadMeta">
@@ -818,9 +818,9 @@ export default function Landing() {
                           <div className="rv-leadEmail">{l.email}</div>
                           <div className="rv-leadNeed">{l.need}</div>
                         </div>
-                      ))}
+                    )}
                     </div>
-                  )}
+                  }
 
                   <Separator className="rv-sep" />
 
@@ -851,15 +851,15 @@ export default function Landing() {
               </div>
 
               <div className="rv-footerLinks">
-                {MOCK.nav.map((n) => (
-                  <button
-                    key={n.id}
-                    className="rv-footerLink"
-                    onClick={() => scrollToId(n.id)}
-                    type="button">
+                {MOCK.nav.map((n) =>
+                <button
+                  key={n.id}
+                  className="rv-footerLink"
+                  onClick={() => scrollToId(n.id)}
+                  type="button">
                     {n.label}
                   </button>
-                ))}
+                )}
               </div>
 
               <div className="rv-footerCtas">
@@ -890,6 +890,6 @@ export default function Landing() {
           </div>
         </footer>
       </main>
-    </div>
-  );
+    </div>);
+
 }
