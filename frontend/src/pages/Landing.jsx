@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,7 +100,6 @@ function generateId() {
 export default function Landing() {
   const ready = useInViewAnimation();
   const [leads, setLeads] = useState(() => loadLeads());
-  const formRef = useRef(null);
 
   const form = useForm({
     resolver: zodResolver(leadSchema),
@@ -131,8 +130,7 @@ export default function Landing() {
     });
 
     window.setTimeout(() => {
-      if (!formRef.current) return;
-      formRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      scrollToId("proposalForm");
     }, 40);
   };
 
@@ -592,7 +590,7 @@ export default function Landing() {
             </div>
 
             <div className="rv-grid2">
-              <Card className="rv-card" ref={formRef}>
+              <Card className="rv-card" id="proposalForm">
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Request a proposal</CardTitle>
                   <CardDescription className="rv-cardDesc">
