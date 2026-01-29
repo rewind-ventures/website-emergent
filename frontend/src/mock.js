@@ -25,8 +25,8 @@ export const MOCK = {
     ],
   },
   stats: [
-    { k: "2", v: "Pickleball facilities set up" },
-    { k: "4", v: "Venues with technology delivery" },
+    { k: "200+", v: "Courts delivered" },
+    { k: "50+", v: "Venues operational" },
     { k: "4–8 wks", v: "Typical go-live window" },
   ],
   services: [
