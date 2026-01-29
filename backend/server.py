@@ -84,9 +84,9 @@ async def create_lead(input: LeadCreate):
 async def list_leads(limit: int = Query(default=25, ge=1, le=100)):
     leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
 
-    for l in leads:
-        if isinstance(l.get("created_at"), str):
-            l["created_at"] = datetime.fromisoformat(l["created_at"])
+    for lead in leads:
+        if isinstance(lead.get("created_at"), str):
+            lead["created_at"] = datetime.fromisoformat(lead["created_at"])
 
     return leads
 
