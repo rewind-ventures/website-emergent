@@ -781,8 +781,8 @@
 .rv-contactCard {
   padding: 14px;
   border-radius: 24px;
-  border: 1px solid rgba(0, 69, 52, 0.12);
-  background: rgba(211, 255, 98, 0.26);
+  border: 1px solid rgba(211, 255, 98, 0.24);
+  background: rgba(211, 255, 98, 0.10);
 }
 
 .rv-contactTitle {
