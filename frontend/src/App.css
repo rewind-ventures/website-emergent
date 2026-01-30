@@ -1,24 +1,40 @@
 /* Rewind Ventures landing page styles */
 
 :root {
-  /* Backgrounds */
+  /* Light theme tokens (kept for completeness) */
   --bg-page: #FAFFEE;
   --bg-card: #FAFAFF;
   --bg-subtle: #EDEDFE;
 
-  /* Text */
   --text-primary: #004534;
   --text-secondary: #0C6951;
   --text-light: #807979;
 
-  /* Borders */
-  --border-light: #CACAFC;
-  --border-medium: #DDDDDD;
+  --border-soft: rgba(0, 69, 52, 0.14);
 
-  /* Accent */
   --brand-primary: #D3FF62;
   --brand-dark: #004534;
   --brand-hover: #0C6951;
+
+  --header-bg: var(--brand-dark);
+  --header-shadow: 0 2px 10px rgba(0, 69, 52, 0.22);
+}
+
+/* Always-dark mode overrides */
+.dark {
+  --bg-page: #050B08;
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --bg-subtle: rgba(255, 255, 255, 0.04);
+
+  --text-primary: rgba(255, 255, 255, 0.94);
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --text-light: rgba(255, 255, 255, 0.55);
+
+  --border-soft: rgba(255, 255, 255, 0.10);
+
+  /* keep brand colors, but make header more premium */
+  --header-bg: rgba(0, 69, 52, 0.70);
+  --header-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
 .rv-page {
