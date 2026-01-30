@@ -508,9 +508,10 @@
 }
 
 .rv-tabsTrigger[data-state="active"] {
-  background: rgba(211, 255, 98, 0.70) !important;
+  background: rgba(211, 255, 98, 0.18) !important;
   color: var(--text-primary) !important;
-  box-shadow: 0 8px 18px rgba(0, 69, 52, 0.12);
+  border-color: rgba(211, 255, 98, 0.30) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
 }
 
 .rv-tabsTrigger:hover {
