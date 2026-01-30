@@ -54,23 +54,7 @@ import {
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-function loadLocalLeads() {
-  try {
-    const raw = localStorage.getItem("rewind_leads_v1");
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocalLead(lead) {
-  const existing = loadLocalLeads();
-  const next = [lead, ...existing].slice(0, 25);
-  localStorage.setItem("rewind_leads_v1", JSON.stringify(next));
-  return next;
-}
+// Local lead storage removed from client-facing site
 
 const leadSchema = z.object({
   name: z.string().min(2, "Please enter your name"),
