@@ -706,44 +706,14 @@ export default function Landing() {
 
               <Card className="rv-card rv-cardSoft">
                 <CardHeader>
-                  <CardTitle className="rv-cardTitle">Recent inquiries</CardTitle>
+                  <CardTitle className="rv-cardTitle">Prefer email?</CardTitle>
                   <CardDescription className="rv-cardDesc">
-                    {isLoadingLeads ?
-                    "Loading recent inquiries…" :
-                    leadsSource === "api" ?
-                    "Pulled from the backend." :
-                    "Showing your browser-saved inquiries (MOCK fallback)."}
+                    If you'd rather email directly, write to us here.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {isLoadingLeads ?
-                  <div className="rv-empty">Loading…</div> :
-                  leads.length === 0 ?
-                  <div className="rv-empty">
-                      No form submissions yet. Send one to see it appear here.
-                    </div> :
-
-                  <div className="rv-leads">
-                      {leads.slice(0, 6).map((l) =>
-                    <div key={l.id} className="rv-lead">
-                          <div className="rv-leadTop">
-                            <div className="rv-leadName">{l.name}</div>
-                            <div className="rv-leadMeta">
-                              {new Date(l.createdAt || l.created_at || Date.now()).toLocaleString()}
-                            </div>
-                          </div>
-                          <div className="rv-leadCompany">{l.company}</div>
-                          <div className="rv-leadEmail">{l.email}</div>
-                          <div className="rv-leadNeed">{l.need}</div>
-                        </div>
-                    )}
-                    </div>
-                  }
-
-                  <Separator className="rv-sep" />
-
                   <div className="rv-contactCard">
-                    <div className="rv-contactTitle">Prefer email?</div>
+                    <div className="rv-contactTitle">Email</div>
                     <a className="rv-emailLink" href={`mailto:${MOCK.brand.email}`}>
                       {MOCK.brand.email}
                     </a>
