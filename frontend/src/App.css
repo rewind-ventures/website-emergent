@@ -588,8 +588,8 @@
   font-weight: 800;
   font-size: 13px;
   color: var(--text-secondary);
-  background: rgba(0, 69, 52, 0.06);
-  border: 1px solid rgba(0, 69, 52, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 8px 12px;
 }
