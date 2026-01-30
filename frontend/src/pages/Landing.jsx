@@ -138,37 +138,7 @@ export default function Landing() {
     mode: "onTouched"
   });
 
-  useEffect(() => {
-    let mounted = true;
-    const run = async () => {
-      if (!API || API.includes("undefined")) return;
-      setIsLoadingLeads(true);
-      try {
-        const res = await axios.get(`${API}/leads`, { params: { limit: 6 } });
-        if (!mounted) return;
-        setLeadsSource("api");
-        const normalized = Array.isArray(res.data) ?
-        res.data.map((l) => ({
-          ...l,
-          createdAt: l.created_at || l.createdAt
-        })) :
-        [];
-        setLeads(normalized);
-      } catch (e) {
-        // Keep localStorage leads as fallback
-        if (!mounted) return;
-        setLeadsSource("local");
-        setLeads(loadLocalLeads().slice(0, 6));
-      } finally {
-        if (mounted) setIsLoadingLeads(false);
-      }
-    };
-
-    run();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  // (Removed) Client-facing lead list
 
   const onSubmit = async (values) => {
     const localPayload = {
