@@ -154,14 +154,9 @@ export default function Landing() {
         description: "Submitted successfully. We'll get back to you shortly."
       });
     } catch (e) {
-      // Fallback to localStorage if backend is unreachable
-      const next = saveLocalLead(localPayload);
-      setLeads(next.slice(0, 6));
-      setLeadsSource("local");
-
-      toast.message("Saved locally", {
+      toast.message("Submission not sent", {
         description:
-        "Backend unavailable, so we saved this in your browser (MOCK fallback)."
+          "Backend was unreachable, so your request could not be submitted. Please email us instead."
       });
     } finally {
       form.reset();
