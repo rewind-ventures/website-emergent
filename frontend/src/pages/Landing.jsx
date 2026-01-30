@@ -772,7 +772,7 @@ export default function Landing() {
             <div className="rv-footerBottom">
               <span>© {new Date().getFullYear()} {MOCK.brand.name}. All rights reserved.</span>
               <span className="rv-footerNote">
-                Form submissions are stored locally (MOCK) until backend wiring.
+                Reach us at {MOCK.brand.email}.
               </span>
             </div>
           </div>
