@@ -142,13 +142,13 @@
 }
 
 .rv-btnSecondary {
-  border-color: rgba(255, 255, 255, 0.42) !important;
-  color: white !important;
-  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+  color: var(--text-primary) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .rv-btnSecondary:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .rv-btnCta {
