@@ -540,8 +540,8 @@
 }
 
 .rv-outcome {
-  background: rgba(255, 255, 255, 0.60);
-  border: 1px solid rgba(0, 69, 52, 0.12);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
   border-radius: 22px;
   padding: 14px;
 }
@@ -612,8 +612,8 @@
   gap: 10px;
   padding: 12px 14px;
   border-radius: 18px;
-  border: 1px solid rgba(0, 69, 52, 0.12);
-  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
 }
 
 .rv-statK {
@@ -636,8 +636,8 @@
 }
 
 .rv-quote {
-  border: 1px solid rgba(0, 69, 52, 0.12);
-  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
   border-radius: 22px;
   padding: 14px;
 }
@@ -734,9 +734,9 @@
 }
 
 .rv-lead {
-  border: 1px solid rgba(0, 69, 52, 0.12);
+  border: 1px solid var(--border-soft);
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.05);
   padding: 14px;
 }
 
