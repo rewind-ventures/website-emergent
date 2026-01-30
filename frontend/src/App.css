@@ -132,13 +132,13 @@
 
 .rv-btnPrimary {
   background: var(--brand-primary) !important;
-  color: var(--brand-dark) !important;
-  box-shadow: 0 10px 24px rgba(0, 69, 52, 0.14);
+  color: #04110b !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
 }
 
 .rv-btnPrimary:hover {
   background: #c7ff2f !important;
-  box-shadow: 0 14px 28px rgba(0, 69, 52, 0.18);
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.34);
 }
 
 .rv-btnSecondary {
