@@ -495,8 +495,8 @@
 .rv-tabsTrigger {
   border-radius: 22px !important;
   padding: 12px 12px !important;
-  border: 1px solid rgba(0, 69, 52, 0.14) !important;
-  background: rgba(255, 255, 255, 0.62) !important;
+  border: 1px solid var(--border-soft) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   font-weight: 800 !important;
