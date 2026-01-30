@@ -89,20 +89,11 @@ const ServiceIcon = ({ id }) => {
   return <Code2 {...iconProps} />;
 };
 
-const ServiceTabIcon = ({ id }) =>
-<span className="rv-tabIcon" aria-hidden>
+const ServiceTabIcon = ({ id }) => (
+  <span className="rv-tabIcon" aria-hidden>
     <ServiceIcon id={id} />
-  </span>;
-
-
-function generateId() {
-  try {
-    if (crypto?.randomUUID) return crypto.randomUUID();
-  } catch {
-
-    // ignore
-  }return `lead_${Math.random().toString(16).slice(2)}_${Math.random().toString(16).slice(2)}`;
-}
+  </span>
+);
 
 export default function Landing() {
   const ready = useInViewAnimation();
