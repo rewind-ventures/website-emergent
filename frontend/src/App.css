@@ -380,7 +380,7 @@
 }
 
 .rv-sectionAlt {
-  background: #F7F7F7;
+  background: var(--bg-subtle);
 }
 
 .rv-sectionHead {
