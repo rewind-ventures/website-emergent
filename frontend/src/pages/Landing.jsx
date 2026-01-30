@@ -597,7 +597,7 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="rv-grid2">
+            <div className="rv-grid2" style={{ gridTemplateColumns: "1fr" }}>
               <Card className="rv-card" id="proposalForm">
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Request a proposal</CardTitle>
