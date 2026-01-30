@@ -123,14 +123,7 @@ function generateId() {
 export default function Landing() {
   const ready = useInViewAnimation();
 
-  // Immediate fallback load for fast paint (before API resolves)
-  useEffect(() => {
-    setLeads(loadLocalLeads().slice(0, 6));
-  }, []);
-
-  const [leads, setLeads] = useState([]);
-  const [leadsSource, setLeadsSource] = useState("local");
-  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
+  // Lead capture is handled via backend; client-facing site should not display submissions.
 
   const form = useForm({
     resolver: zodResolver(leadSchema),
