@@ -16,8 +16,8 @@ body {
 }
 
 ::selection {
-  background: rgba(211, 255, 98, 0.75);
-  color: #004534;
+  background: rgba(211, 255, 98, 0.28);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 code {
