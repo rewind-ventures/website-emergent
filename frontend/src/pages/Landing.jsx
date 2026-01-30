@@ -708,7 +708,7 @@ export default function Landing() {
                 <CardHeader>
                   <CardTitle className="rv-cardTitle">Prefer email?</CardTitle>
                   <CardDescription className="rv-cardDesc">
-                    If you'd rather email directly, write to us here.
+                    If you&apos;d rather email directly, write to us here.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
