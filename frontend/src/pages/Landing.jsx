@@ -116,44 +116,29 @@ export default function Landing() {
   // (Removed) Client-facing lead list
 
   const onSubmit = async (values) => {
-    const localPayload = {
-      ...values,
-      id: generateId(),
-      createdAt: new Date().toISOString(),
-      source: "landing_form"
-    };
-
     try {
-      const res = await axios.post(`${API}/leads`, {
+      await axios.post(`${API}/leads`, {
         name: values.name,
         company: values.company,
         email: values.email,
         phone: values.phone || null,
         need: values.need,
-        source: "landing_form"
+        source: "landing_form",
       });
-
-      const created = {
-        ...res.data,
-        createdAt: res.data.created_at || res.data.createdAt
-      };
-
-      setLeads((prev) => [created, ...prev].slice(0, 6));
-      setLeadsSource("api");
 
       toast.success("Request received", {
-        description: "Submitted successfully. We'll get back to you shortly."
+        description: "Submitted successfully. We'll get back to you shortly.",
       });
-    } catch (e) {
-      toast.message("Submission not sent", {
-        description:
-          "Backend was unreachable, so your request could not be submitted. Please email us instead."
-      });
-    } finally {
+
       form.reset();
       window.setTimeout(() => {
         scrollToId("proposalForm");
       }, 40);
+    } catch (e) {
+      toast.message("Submission not sent", {
+        description:
+          "We couldn't submit your request right now. Please email us instead.",
+      });
     }
   };
 
