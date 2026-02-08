@@ -67,6 +67,49 @@ class Lead(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+# Consultations (new)
+class SportCourts(BaseModel):
+    sport: str
+    courts: int
+
+class ConsultationCreate(BaseModel):
+    name: str
+    email: str
+    company: str
+    details: str
+    area_sqft: Optional[int] = None
+    mode: Literal["single", "multi"]
+    sports: List[SportCourts]
+    facility_name: str
+    google_maps_url: str
+    source: str = "consultation_form"
+
+class Consultation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    company: str
+    details: str
+    area_sqft: Optional[int] = None
+    mode: Literal["single", "multi"]
+    sports: List[SportCourts]
+    facility_name: str
+    google_maps_url: str
+    source: str = "consultation_form"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ConsultationImageInit(BaseModel):
+    filename: str
+    size: int
+    content_type: Optional[str] = None
+
+class ConsultationImageInitResponse(BaseModel):
+    image_id: str
+
+
+
 
 @api_router.post("/leads", response_model=Lead)
 async def create_lead(input: LeadCreate):
