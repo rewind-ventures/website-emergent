@@ -175,16 +175,7 @@ export default function Sections({ data }) {
                   </div>
                 </div>
 
-                <div className="rv2-contactItem">
-                  <span className="rv2-contactIcon" aria-hidden>
-                    <Phone className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <div className="rv2-contactLabel">Call us at</div>
-                    <div className="rv2-contactValue">+91 7020923573</div>
-                  </div>
-                </div>
-
+{/* phone removed: keep contact professional via email / consultation / message */}
                 <div className="rv2-contactItem">
                   <span className="rv2-contactIcon" aria-hidden>
                     <MapPin className="h-4 w-4" />
