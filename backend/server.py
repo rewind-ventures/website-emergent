@@ -173,6 +173,19 @@ async def list_leads(limit: int = Query(default=25, ge=1, le=100)):
     leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
 
     for lead in leads:
+
+@api_router.post("/leads", response_model=Lead)
+async def create_lead(input: LeadCreate):
+    lead = Lead(**input.model_dump())
+
+    doc = lead.model_dump()
+    doc["created_at"] = doc["created_at"].isoformat()
+
+    # Ensure uniqueness by our business id
+    await db.leads.update_one({"id": doc["id"]}, {"$setOnInsert": doc}, upsert=True)
+    return lead
+
+
         if isinstance(lead.get("created_at"), str):
             lead["created_at"] = datetime.fromisoformat(lead["created_at"])
 
