@@ -182,7 +182,7 @@ export default function Sections({ data }) {
                   </span>
                   <div>
                     <div className="rv2-contactLabel">Call us at</div>
-                    <div className="rv2-contactValue">+91 (add later)</div>
+                    <div className="rv2-contactValue">+91 7020923573</div>
                   </div>
                 </div>
 
@@ -203,7 +203,7 @@ export default function Sections({ data }) {
                 className="rv2-btn rv2-btnPrimary rv2-btnXL"
                 onClick={() => window.open(brand.calendlyUrl, "_blank")}
                 type="button">
-                Book a consultation
+Book a consultation
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
