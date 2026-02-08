@@ -27,6 +27,54 @@ db = client[os.environ['DB_NAME']]
 # Create the main app without a prefix
 app = FastAPI()
 
+# Resend email configuration
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "hello@rewind-ventures.com")
+resend.api_key = RESEND_API_KEY
+
+
+def _safe_email(s: Optional[str]) -> str:
+    return (s or "").strip()
+
+
+def _render_kv_table(rows: List[tuple]) -> str:
+    # Simple email-safe HTML
+    tr = []
+    for k, v in rows:
+        tr.append(
+            f"<tr><td style='padding:8px 10px;border:1px solid #e5e7eb;white-space:nowrap;font-weight:700'>{k}</td>"
+            f"<td style='padding:8px 10px;border:1px solid #e5e7eb'>{v}</td></tr>"
+        )
+    return "<table style='border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px'>" + "".join(tr) + "</table>"
+
+
+async def send_notification_email(
+    *,
+    to_email: str,
+    subject: str,
+    html: str,
+    reply_to: Optional[str] = None,
+    attachments: Optional[List[dict]] = None,
+):
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY not set; skipping email send")
+        return {"skipped": True, "reason": "missing_api_key"}
+
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [to_email],
+        "subject": subject,
+        "html": html,
+    }
+    if reply_to:
+        params["reply_to"] = reply_to
+    if attachments:
+        params["attachments"] = attachments
+
+    return await asyncio.to_thread(resend.Emails.send, params)
+
+
+
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
