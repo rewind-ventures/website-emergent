@@ -216,6 +216,189 @@ def test_validation_missing_email():
         print(f"❌ Validation test error: {str(e)}")
         return False
 
+def test_create_consultation():
+    """Test POST /api/consultations with valid payload"""
+    print("\n=== Testing POST /api/consultations (Create Consultation) ===")
+    
+    # Valid consultation payload as specified in the request
+    consultation_data = {
+        "name": "A",
+        "email": "a@example.com",
+        "company": "C",
+        "details": "Some details long enough",
+        "area_sqft": 12000,
+        "mode": "single",
+        "sports": [{"sport": "pickleball", "courts": 6}],
+        "facility_name": "Test Site",
+        "google_maps_url": "https://www.google.com/maps/place/Pune",
+        "source": "consultation_form"
+    }
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations", json=consultation_data)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            required_fields = ["id", "created_at"]
+            
+            missing_fields = [field for field in required_fields if field not in data]
+            if missing_fields:
+                print(f"❌ Missing required fields: {missing_fields}")
+                return False, None
+            
+            # Validate created_at is a valid datetime
+            try:
+                datetime.fromisoformat(data["created_at"].replace('Z', '+00:00'))
+            except:
+                print(f"❌ Invalid created_at format: {data['created_at']}")
+                return False, None
+            
+            print("✅ Consultation created successfully with id and created_at")
+            return True, data["id"]
+        else:
+            print(f"❌ Create consultation failed with status {response.status_code}")
+            return False, None
+    except Exception as e:
+        print(f"❌ Create consultation error: {str(e)}")
+        return False, None
+
+def test_init_image_upload(consultation_id):
+    """Test POST /api/consultations/{id}/images/init"""
+    print(f"\n=== Testing POST /api/consultations/{consultation_id}/images/init (Init Image Upload) ===")
+    
+    init_data = {
+        "filename": "test_image.jpg",
+        "size": 1024,
+        "content_type": "image/jpeg"
+    }
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations/{consultation_id}/images/init", json=init_data)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            if "image_id" not in data:
+                print("❌ Missing image_id in response")
+                return False, None
+            
+            print("✅ Image upload initialized successfully")
+            return True, data["image_id"]
+        else:
+            print(f"❌ Init image upload failed with status {response.status_code}")
+            return False, None
+    except Exception as e:
+        print(f"❌ Init image upload error: {str(e)}")
+        return False, None
+
+def test_upload_image_chunks(consultation_id, image_id):
+    """Test uploading 2 chunks via POST /api/consultations/{id}/images/{image_id}/chunk"""
+    print(f"\n=== Testing Image Chunk Upload (2 chunks) ===")
+    
+    # Create test data to split into 2 chunks
+    test_data = b"This is a test image file content that will be split into two chunks for testing purposes."
+    chunk_size = len(test_data) // 2
+    chunk1 = test_data[:chunk_size]
+    chunk2 = test_data[chunk_size:]
+    
+    chunks = [chunk1, chunk2]
+    total_chunks = 2
+    
+    for i, chunk_data in enumerate(chunks):
+        print(f"\n--- Uploading chunk {i + 1}/{total_chunks} ---")
+        
+        # Prepare multipart form data
+        files = {
+            'chunk': ('chunk', chunk_data, 'application/octet-stream')
+        }
+        data = {
+            'index': i,
+            'total': total_chunks
+        }
+        
+        try:
+            response = requests.post(
+                f"{BASE_API_URL}/consultations/{consultation_id}/images/{image_id}/chunk",
+                files=files,
+                data=data
+            )
+            print(f"Chunk {i + 1} Status Code: {response.status_code}")
+            print(f"Chunk {i + 1} Response: {response.json()}")
+            
+            if response.status_code != 200:
+                print(f"❌ Chunk {i + 1} upload failed with status {response.status_code}")
+                return False
+            
+            response_data = response.json()
+            if not response_data.get("ok"):
+                print(f"❌ Chunk {i + 1} upload did not return ok: true")
+                return False
+            
+            print(f"✅ Chunk {i + 1} uploaded successfully")
+            
+        except Exception as e:
+            print(f"❌ Chunk {i + 1} upload error: {str(e)}")
+            return False
+    
+    print("✅ All chunks uploaded successfully")
+    return True
+
+def test_complete_image_upload(consultation_id, image_id):
+    """Test POST /api/consultations/{id}/images/{image_id}/complete"""
+    print(f"\n=== Testing POST /api/consultations/{consultation_id}/images/{image_id}/complete (Complete Upload) ===")
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations/{consultation_id}/images/{image_id}/complete")
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            if not data.get("ok"):
+                print("❌ Complete upload did not return ok: true")
+                return False
+            
+            print("✅ Image upload completed successfully")
+            return True
+        else:
+            print(f"❌ Complete image upload failed with status {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ Complete image upload error: {str(e)}")
+        return False
+
+def test_missing_consultation_404():
+    """Test image upload with missing consultation_id should return 404"""
+    print(f"\n=== Testing Image Upload with Missing Consultation (404 Test) ===")
+    
+    fake_consultation_id = "non-existent-consultation-id"
+    
+    init_data = {
+        "filename": "test_image.jpg",
+        "size": 1024,
+        "content_type": "image/jpeg"
+    }
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations/{fake_consultation_id}/images/init", json=init_data)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 404:
+            print("✅ Correctly returned 404 for missing consultation")
+            return True
+        else:
+            print(f"❌ Expected 404, got {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ Missing consultation test error: {str(e)}")
+        return False
+
 def run_all_tests():
     """Run all backend API tests in sequence"""
     print("🚀 Starting Rewind Ventures Backend API Tests")
