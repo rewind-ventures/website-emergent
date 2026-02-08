@@ -295,7 +295,7 @@ export default function Consultation() {
     } catch (e) {
       toast.message("Could not submit", {
         description:
-          "Please try again or email us directly at rewindventures@gmail.com.",
+          "Please try again or email us directly at hello@rewind-ventures.com.",
       });
     } finally {
       setSubmitting(false);
@@ -354,7 +354,7 @@ export default function Consultation() {
               <CardHeader>
                 <CardTitle className="rv2-panelTitle">Basic information</CardTitle>
                 <CardDescription className="rv2-panelDesc">
-                  This form saves to our system (email delivery will be added later).
+                  Share the details below and we’ll reach out soon.
                 </CardDescription>
               </CardHeader>
               <CardContent>

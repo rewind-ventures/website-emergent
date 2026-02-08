@@ -298,6 +298,9 @@ async def create_consultation(input: ConsultationCreate):
     response_model=ConsultationImageInitResponse,
 )
 async def init_consultation_image(consultation_id: str, input: ConsultationImageInit):
+    # enforce 2MB per image (matches frontend)
+    if input.size > 2 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image exceeds 2MB limit")
     # ensure consultation exists
     exists = await db.consultations.find_one({"id": consultation_id}, {"_id": 0, "id": 1})
     if not exists:
