@@ -116,6 +116,58 @@ async def create_lead(input: LeadCreate):
     lead = Lead(**input.model_dump())
 
     doc = lead.model_dump()
+
+
+@api_router.post("/consultations", response_model=Consultation)
+async def create_consultation(input: ConsultationCreate):
+    obj = Consultation(**input.model_dump())
+    doc = obj.model_dump()
+    doc["created_at"] = doc["created_at"].isoformat()
+    await db.consultations.insert_one(doc)
+    return obj
+
+
+@api_router.post(
+    "/consultations/{consultation_id}/images/init",
+    response_model=ConsultationImageInitResponse,
+)
+async def init_consultation_image(consultation_id: str, input: ConsultationImageInit):
+    # ensure consultation exists
+    exists = await db.consultations.find_one({"id": consultation_id}, {"_id": 0, "id": 1})
+    if not exists:
+        raise HTTPException(status_code=404, detail="Consultation not found")
+
+    image_id = str(uuid.uuid4())
+    meta = {
+        "id": image_id,
+        "consultation_id": consultation_id,
+        "filename": input.filename,
+        "size": input.size,
+        "content_type": input.content_type,
+        "status": "uploading",
+        "chunks": [],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.consultation_images.insert_one(meta)
+    return {"image_id": image_id}
+
+
+@api_router.post("/consultations/{consultation_id}/images/{image_id}/chunk")
+async def upload_consultation_image_chunk(
+    consultation_id: str,
+    image_id: str,
+    index: int = Query(..., ge=0),
+    total: int = Query(..., ge=1, le=10000),
+    chunk: "UploadFile" = None,
+):
+    # NOTE: UploadFile imported below to avoid circular import issues with fastapi.
+    raise HTTPException(status_code=500, detail="Not implemented")
+
+
+@api_router.post("/consultations/{consultation_id}/images/{image_id}/complete")
+async def complete_consultation_image_upload(consultation_id: str, image_id: str):
+    raise HTTPException(status_code=500, detail="Not implemented")
+
     doc["created_at"] = doc["created_at"].isoformat()
 
     # Ensure uniqueness by our business id
