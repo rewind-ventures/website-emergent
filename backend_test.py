@@ -399,6 +399,82 @@ def test_missing_consultation_404():
         print(f"❌ Missing consultation test error: {str(e)}")
         return False
 
+def run_resend_integration_tests():
+    """Run focused tests for Resend email integration without real API key"""
+    print("🚀 Testing Resend Email Integration (without real RESEND_API_KEY)")
+    print("=" * 70)
+    
+    results = []
+    consultation_id = None
+    image_id = None
+    
+    # Test 1: GET /api/ returns 200
+    print("\n=== Test 1: GET /api/ should return 200 ===")
+    results.append(("GET /api/ returns 200", test_hello_world()))
+    
+    # Test 2: POST /api/leads should return 200 and not error even if RESEND_API_KEY missing
+    print("\n=== Test 2: POST /api/leads should work without RESEND_API_KEY ===")
+    success, lead_id = test_create_lead()
+    results.append(("POST /api/leads works without API key", success))
+    
+    # Test 3: POST /api/consultations should return 200 and not error if RESEND_API_KEY missing
+    print("\n=== Test 3: POST /api/consultations should work without RESEND_API_KEY ===")
+    success, consultation_id = test_create_consultation()
+    results.append(("POST /api/consultations works without API key", success))
+    
+    # Test 4: Upload flow init/chunk/complete still works
+    print("\n=== Test 4: Upload flow should work without RESEND_API_KEY ===")
+    if consultation_id:
+        # Test 4a: Init Image Upload
+        success, image_id = test_init_image_upload(consultation_id)
+        results.append(("Upload init works without API key", success))
+        
+        if image_id:
+            # Test 4b: Upload Image Chunks
+            chunk_success = test_upload_image_chunks(consultation_id, image_id)
+            results.append(("Upload chunks work without API key", chunk_success))
+            
+            # Test 4c: Complete Image Upload
+            complete_success = test_complete_image_upload(consultation_id, image_id)
+            results.append(("Upload complete works without API key", complete_success))
+        else:
+            print("⚠️ Skipping chunk and complete tests due to init failure")
+            results.extend([
+                ("Upload chunks work without API key", False),
+                ("Upload complete works without API key", False)
+            ])
+    else:
+        print("⚠️ Skipping upload tests due to consultation creation failure")
+        results.extend([
+            ("Upload init works without API key", False),
+            ("Upload chunks work without API key", False),
+            ("Upload complete works without API key", False)
+        ])
+    
+    # Summary
+    print("\n" + "=" * 70)
+    print("📊 RESEND INTEGRATION TEST RESULTS")
+    print("=" * 70)
+    
+    passed = 0
+    total = len(results)
+    
+    for test_name, success in results:
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{test_name:<40} {status}")
+        if success:
+            passed += 1
+    
+    print("-" * 70)
+    print(f"Total: {passed}/{total} tests passed")
+    
+    if passed == total:
+        print("🎉 All Resend integration tests passed! Backend handles missing RESEND_API_KEY correctly.")
+        return True
+    else:
+        print(f"⚠️ {total - passed} test(s) failed. Backend needs attention for Resend integration.")
+        return False
+
 def run_all_tests():
     """Run all backend API tests in sequence"""
     print("🚀 Starting Rewind Ventures Backend API Tests")
