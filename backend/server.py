@@ -111,13 +111,6 @@ class ConsultationImageInitResponse(BaseModel):
 
 
 
-@api_router.post("/leads", response_model=Lead)
-async def create_lead(input: LeadCreate):
-    lead = Lead(**input.model_dump())
-
-    doc = lead.model_dump()
-
-
 @api_router.post("/consultations", response_model=Consultation)
 async def create_consultation(input: ConsultationCreate):
     obj = Consultation(**input.model_dump())
