@@ -144,6 +144,18 @@ backend:
         agent: "testing"
         comment: "✅ IMAGE UPLOAD API FULLY TESTED: All image upload endpoints working correctly. (1) POST /api/consultations/{id}/images/init returns image_id ✅ (2) POST /api/consultations/{id}/images/{image_id}/chunk accepts multipart form data with index, total, and file fields - tested with 2 chunks ✅ (3) POST /api/consultations/{id}/images/{image_id}/complete successfully completes upload ✅ (4) 404 error correctly returned for missing consultation_id ✅. Chunked file upload system working properly with MongoDB storage."
 
+  - task: "Resend email integration (graceful handling without API key)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ RESEND EMAIL INTEGRATION TESTED: All 6/6 tests passed successfully without real RESEND_API_KEY. (1) GET /api/ returns 200 ✅ (2) POST /api/leads returns 200 and logs warning when RESEND_API_KEY missing ✅ (3) POST /api/consultations returns 200 and logs warning when RESEND_API_KEY missing ✅ (4) Upload flow init/chunk/complete works without API key ✅. Backend correctly handles missing RESEND_API_KEY by logging warnings and skipping email sends without errors. Email integration gracefully degrades as expected."
+
 frontend:
   - task: "Landing page UI (services tabs, FAQ accordion, contact form)"
     implemented: true
