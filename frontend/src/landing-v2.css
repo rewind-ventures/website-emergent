@@ -379,6 +379,10 @@
   color: rgba(255, 255, 255, 0.76);
 }
 
+.rv2-outcomeDesc {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .rv2-outcomeDot {
   height: 8px;
   width: 8px;
