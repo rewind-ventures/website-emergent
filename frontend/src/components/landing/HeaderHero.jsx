@@ -59,7 +59,7 @@ export default function HeaderHero({ brand, nav, stats }) {
             <div className="rv2-headerCtas">
               <Button
                 className="rv2-btn rv2-btnPrimary"
-                onClick={() => window.open(brand.calendlyUrl, "_blank")}
+                onClick={() => (window.location.href = "/consultation")}
                 type="button">
                 Book a consultation
                 <ArrowRight className="h-4 w-4" />
@@ -91,26 +91,10 @@ export default function HeaderHero({ brand, nav, stats }) {
             <div className="rv2-heroCtas">
               <Button
                 className="rv2-btn rv2-btnPrimary rv2-btnXL"
-                onClick={() => window.open(brand.calendlyUrl, "_blank")}
+                onClick={() => (window.location.href = "/consultation")}
                 type="button">
                 Book a consultation
                 <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button
-                className="rv2-btn rv2-btnSecondary rv2-btnXL"
-                variant="outline"
-                onClick={() => scrollToId("contact")}
-                type="button">
-                Request a proposal
-                <Calendar className="h-4 w-4" />
-              </Button>
-              <Button
-                className="rv2-btn rv2-btnGhost"
-                variant="ghost"
-                onClick={() => (window.location.href = `mailto:${brand.email}`)}
-                type="button">
-                Contact us
-                <Mail className="h-4 w-4" />
               </Button>
             </div>
 
