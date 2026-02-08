@@ -217,6 +217,34 @@ async def create_lead(input: LeadCreate):
     doc["created_at"] = doc["created_at"].isoformat()
 
     await db.leads.update_one({"id": doc["id"]}, {"$setOnInsert": doc}, upsert=True)
+
+    # Email notification (Send Message form)
+    try:
+        subject = f"New website message — {lead.company}"
+        html = (
+            "<div style='font-family:Arial,sans-serif'>"
+            "<h2 style='margin:0 0 10px'>New website enquiry</h2>"
+            + _render_kv_table(
+                [
+                    ("Name", lead.name),
+                    ("Email", lead.email),
+                    ("Company", lead.company),
+                    ("Message", lead.need),
+                    ("Source", lead.source),
+                    ("Created", doc["created_at"]),
+                ]
+            )
+            + "</div>"
+        )
+        await send_notification_email(
+            to_email="hello@rewind-ventures.com",
+            subject=subject,
+            html=html,
+            reply_to=_safe_email(lead.email),
+        )
+    except Exception as e:
+        logger.exception("Failed sending lead email notification: %s", str(e))
+
     return lead
 
 
