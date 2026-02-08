@@ -137,6 +137,21 @@ class ConsultationCreate(BaseModel):
     source: str = "consultation_form"
 
 class Consultation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    company: str
+    details: str
+    area_sqft: Optional[int] = None
+    mode: Literal["single", "multi"]
+    sports: List[SportCourts]
+    facility_name: str
+    google_maps_url: str
+    source: str = "consultation_form"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 
 async def _build_image_attachments_for_consultation(
     consultation_id: str, max_total_bytes: int = 18 * 1024 * 1024
