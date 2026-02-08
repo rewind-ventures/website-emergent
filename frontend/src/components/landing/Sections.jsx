@@ -101,19 +101,66 @@ export default function Sections({ data }) {
             <Badge className="rv2-sectionTag" variant="secondary">
               TRACK RECORD
             </Badge>
-            <h2 className="rv2-h2">Numbers that speak</h2>
-            <p className="rv2-p">Proof that delivery is our default.</p>
+            <h2 className="rv2-h2">Execution-first delivery</h2>
+            <p className="rv2-p">
+              Operator-led implementation — systems, processes, and handoff.
+            </p>
           </div>
 
-          <div className="rv2-statGrid">
-            {stats.map((s, idx) => (
-              <div
-                key={s.v}
-                className={`rv2-metric ${idx === 1 ? "rv2-metricHot" : ""}`}>
-                <div className="rv2-metricK">{s.k}</div>
-                <div className="rv2-metricV">{s.v}</div>
-              </div>
-            ))}
+          <div className="rv2-cardGrid3" style={{ marginTop: 10 }}>
+            <Card className="rv2-panel">
+              <CardHeader className="rv2-panelHead">
+                <div className="rv2-iconBox" aria-hidden>
+                  <Layers className="h-5 w-5" />
+                </div>
+                <CardDescription className="rv2-panelKicker">
+                  OWNERSHIP
+                </CardDescription>
+                <CardTitle className="rv2-panelTitle">One accountable partner</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="rv2-panelDesc">
+                  From facility planning to tech go-live, we coordinate vendors and
+                  deliver a single integrated outcome.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="rv2-panel">
+              <CardHeader className="rv2-panelHead">
+                <div className="rv2-iconBox" aria-hidden>
+                  <Settings2 className="h-5 w-5" />
+                </div>
+                <CardDescription className="rv2-panelKicker">
+                  INTEGRATION
+                </CardDescription>
+                <CardTitle className="rv2-panelTitle">Systems that talk</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="rv2-panelDesc">
+                  Booking, tournaments, memberships, ratings — integrated cleanly so
+                  operations stay predictable.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="rv2-panel">
+              <CardHeader className="rv2-panelHead">
+                <div className="rv2-iconBox" aria-hidden>
+                  <Code2 className="h-5 w-5" />
+                </div>
+                <CardDescription className="rv2-panelKicker">
+                  CUSTOM
+                </CardDescription>
+                <CardTitle className="rv2-panelTitle">Bespoke where it matters</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="rv2-panelDesc">
+                  When off-the-shelf tools don’t fit, we build the missing layer —
+                  dashboards, automations, and workflows.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
