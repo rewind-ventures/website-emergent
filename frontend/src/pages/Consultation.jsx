@@ -200,7 +200,7 @@ export default function Consultation() {
   const onPickFiles = (evt) => {
     const picked = Array.from(evt.target.files || []);
 
-    const MAX_MB = 3;
+    const MAX_MB = 2;
     const next = [];
     for (const f of picked) {
       if (!f.type.startsWith("image/")) {
@@ -231,7 +231,7 @@ export default function Consultation() {
   const onSubmit = async (values) => {
     if (files.length < 4) {
       toast.message("Upload at least 4 site images", {
-        description: "We need 4 high-quality images from all sides (max 3MB each).",
+        description: "We need 4 high-quality images from all sides (max 2MB each).",
       });
       return;
     }
@@ -620,7 +620,7 @@ export default function Consultation() {
                         Site photos
                       </h2>
                       <p className="rv2-p" style={{ marginTop: 8 }}>
-                        Upload at least 4 images (max 3MB each) covering all 4 sides.
+                        Upload at least 4 images (max 2MB each) covering all 4 sides.
                       </p>
                     </div>
 
