@@ -143,6 +143,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ IMAGE UPLOAD API FULLY TESTED: All image upload endpoints working correctly. (1) POST /api/consultations/{id}/images/init returns image_id ✅ (2) POST /api/consultations/{id}/images/{image_id}/chunk accepts multipart form data with index, total, and file fields - tested with 2 chunks ✅ (3) POST /api/consultations/{id}/images/{image_id}/complete successfully completes upload ✅ (4) 404 error correctly returned for missing consultation_id ✅. Chunked file upload system working properly with MongoDB storage."
+      - working: true
+        agent: "testing"
+        comment: "✅ 2MB SIZE ENFORCEMENT VERIFIED: Tested image size limits on POST /api/consultations/{id}/images/init endpoint. (1) Created consultation successfully ✅ (2) 3MB image (3,000,000 bytes) correctly rejected with 400 status and 'Image exceeds 2MB limit' error message ✅ (3) 1MB image (1,000,000 bytes) correctly accepted with 200 status and image_id returned ✅. Backend properly enforces 2MB per image limit as implemented."
 
   - task: "Resend email integration (graceful handling without API key)"
     implemented: true
