@@ -379,6 +379,41 @@ async def complete_consultation_image_upload(consultation_id: str, image_id: str
         {"$addToSet": {"image_ids": image_id}},
     )
 
+    # If all uploads are complete for this consultation, send a follow-up email with attachments.
+    try:
+        images = await db.consultation_images.find(
+            {"consultation_id": consultation_id}, {"_id": 0}
+        ).to_list(50)
+        if images and all((img.get("status") == "complete") for img in images):
+            attachments = await _build_image_attachments_for_consultation(consultation_id)
+            if attachments is None:
+                # Fallback: too large for safe email size
+                await send_notification_email(
+                    to_email="hello@rewind-ventures.com",
+                    subject=f"Consultation images uploaded — (too large to attach) [{consultation_id}]",
+                    html=(
+                        "<div style='font-family:Arial,sans-serif'>"
+                        "<h3 style='margin:0 0 10px'>Images uploaded</h3>"
+                        "<p>Total size exceeded safe email attachment limits. Images are stored in the system.</p>"
+                        f"<p>Consultation ID: <b>{consultation_id}</b></p>"
+                        "</div>"
+                    ),
+                )
+            elif len(attachments) > 0:
+                await send_notification_email(
+                    to_email="hello@rewind-ventures.com",
+                    subject=f"Consultation images — {consultation_id}",
+                    html=(
+                        "<div style='font-family:Arial,sans-serif'>"
+                        "<h3 style='margin:0 0 10px'>Site images attached</h3>"
+                        f"<p>Consultation ID: <b>{consultation_id}</b></p>"
+                        "</div>"
+                    ),
+                    attachments=attachments,
+                )
+    except Exception as e:
+        logger.exception("Failed sending consultation images email: %s", str(e))
+
     return {"ok": True}
 
 
