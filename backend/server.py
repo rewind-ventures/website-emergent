@@ -254,6 +254,41 @@ async def create_consultation(input: ConsultationCreate):
     doc = obj.model_dump()
     doc["created_at"] = doc["created_at"].isoformat()
     await db.consultations.insert_one(doc)
+
+    # Email notification (Book a consultation form) - best-effort.
+    # Attachments are added AFTER image upload completes (see complete endpoint).
+    try:
+        subject = f"New consultation request — {obj.facility_name}"
+        sports_line = ", ".join([f"{s.sport}: {s.courts}" for s in obj.sports])
+        html = (
+            "<div style='font-family:Arial,sans-serif'>"
+            "<h2 style='margin:0 0 10px'>New consultation request</h2>"
+            + _render_kv_table(
+                [
+                    ("Name", obj.name),
+                    ("Email", obj.email),
+                    ("Company", obj.company),
+                    ("Facility", obj.facility_name),
+                    ("Mode", obj.mode),
+                    ("Sports", sports_line),
+                    ("Area (sq.ft)", str(obj.area_sqft) if obj.area_sqft else ""),
+                    ("Maps", f"<a href='{obj.google_maps_url}'>Open in Google Maps</a>"),
+                    ("Details", obj.details),
+                    ("Created", doc["created_at"]),
+                ]
+            )
+            + "<p style='color:#6b7280;margin-top:12px'>Images will follow in a second email once upload completes.</p>"
+            + "</div>"
+        )
+        await send_notification_email(
+            to_email="hello@rewind-ventures.com",
+            subject=subject,
+            html=html,
+            reply_to=_safe_email(obj.email),
+        )
+    except Exception as e:
+        logger.exception("Failed sending consultation email notification: %s", str(e))
+
     return obj
 
 
