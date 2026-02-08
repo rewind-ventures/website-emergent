@@ -201,7 +201,7 @@ export default function Sections({ data }) {
 
               <Button
                 className="rv2-btn rv2-btnPrimary rv2-btnXL"
-                onClick={() => window.open(brand.calendlyUrl, "_blank")}
+                onClick={() => (window.location.href = "/consultation")}
                 type="button">
 Book a consultation
                 <ArrowRight className="h-4 w-4" />
