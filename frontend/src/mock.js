@@ -25,9 +25,9 @@ export const MOCK = {
     ],
   },
   stats: [
-    { k: "200+", v: "Courts delivered" },
-    { k: "50+", v: "Venues operational" },
-    { k: "4–8 wks", v: "Typical go-live window" },
+    { k: "50+", v: "Sports venues delivered" },
+    { k: "500+", v: "Admin hours saved" },
+    { k: "30%", v: "Lower client attrition" },
   ],
   services: [
     {

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-import { ArrowRight, Calendar, Mail, RotateCcw } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 function scrollToId(id) {
   const el = document.getElementById(id);
@@ -36,7 +36,7 @@ export default function HeaderHero({ brand, nav, stats }) {
                 scrollToId("top");
               }}>
               <span className="rv2-logoMark" aria-hidden>
-                <RotateCcw className="h-4 w-4" />
+                <span className="rv2-logoMonogram">RV</span>
               </span>
               <span className="rv2-logoText">{brand.name}</span>
             </a>
