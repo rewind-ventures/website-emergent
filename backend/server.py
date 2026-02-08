@@ -137,6 +137,51 @@ class ConsultationCreate(BaseModel):
     source: str = "consultation_form"
 
 class Consultation(BaseModel):
+
+async def _build_image_attachments_for_consultation(
+    consultation_id: str, max_total_bytes: int = 18 * 1024 * 1024
+) -> Optional[List[dict]]:
+    # Best-effort attachments: if too large, return None (fallback)
+    images = await db.consultation_images.find(
+        {"consultation_id": consultation_id, "status": "complete"}, {"_id": 0}
+    ).to_list(50)
+
+    attachments: List[dict] = []
+    total = 0
+
+    for img in images:
+        image_id = img.get("id")
+        if not image_id:
+            continue
+
+        chunks = (
+            await db.consultation_image_chunks.find(
+                {"consultation_id": consultation_id, "image_id": image_id}, {"_id": 0}
+            )
+            .sort("index", 1)
+            .to_list(10000)
+        )
+
+        data = b"".join([c.get("data", b"") for c in chunks])
+        if not data:
+            continue
+
+        total += len(data)
+        if total > max_total_bytes:
+            return None
+
+        b64 = base64.b64encode(data).decode("utf-8")
+        attachments.append(
+            {
+                "filename": img.get("filename", f"site-image-{image_id}.jpg"),
+                "content": b64,
+                "content_type": img.get("content_type") or "application/octet-stream",
+            }
+        )
+
+    return attachments
+
+
     model_config = ConfigDict(extra="ignore")
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
