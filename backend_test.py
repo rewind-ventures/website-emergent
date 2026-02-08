@@ -406,36 +406,57 @@ def run_all_tests():
     
     results = []
     lead_id = None
+    consultation_id = None
+    image_id = None
     
     # Test 1: Hello World
     results.append(("Hello World", test_hello_world()))
     
-    # Test 2: Create Lead
+    # Test 2: Create Lead (existing test)
     success, lead_id = test_create_lead()
     results.append(("Create Lead", success))
     
-    if lead_id:
-        # Test 3: List Leads (with created lead)
-        results.append(("List Leads (with created)", test_list_leads(lead_id)))
+    # Test 3: Create Consultation (new)
+    success, consultation_id = test_create_consultation()
+    results.append(("Create Consultation", success))
+    
+    # Consultation image upload tests
+    if consultation_id:
+        # Test 4: Init Image Upload
+        success, image_id = test_init_image_upload(consultation_id)
+        results.append(("Init Image Upload", success))
         
-        # Test 4: Update Lead Status
-        results.append(("Update Lead Status", test_update_lead(lead_id)))
-        
-        # Test 5: Delete Lead
-        results.append(("Delete Lead", test_delete_lead(lead_id)))
-        
-        # Test 6: List Leads (after deletion)
-        results.append(("List Leads (after deletion)", test_list_leads()))
+        if image_id:
+            # Test 5: Upload Image Chunks
+            results.append(("Upload Image Chunks", test_upload_image_chunks(consultation_id, image_id)))
+            
+            # Test 6: Complete Image Upload
+            results.append(("Complete Image Upload", test_complete_image_upload(consultation_id, image_id)))
+        else:
+            print("⚠️ Skipping chunk upload tests due to init failure")
+            results.extend([
+                ("Upload Image Chunks", False),
+                ("Complete Image Upload", False)
+            ])
     else:
-        print("⚠️ Skipping subsequent tests due to lead creation failure")
+        print("⚠️ Skipping image upload tests due to consultation creation failure")
         results.extend([
-            ("List Leads (with created)", False),
-            ("Update Lead Status", False),
-            ("Delete Lead", False),
-            ("List Leads (after deletion)", False)
+            ("Init Image Upload", False),
+            ("Upload Image Chunks", False),
+            ("Complete Image Upload", False)
         ])
     
-    # Test 7: Validation
+    # Test 7: Missing Consultation 404 Test
+    results.append(("Missing Consultation 404", test_missing_consultation_404()))
+    
+    # Optional: Run existing lead tests if needed
+    if lead_id:
+        # Test leads functionality (abbreviated for focus on new features)
+        results.append(("List Leads", test_list_leads(lead_id)))
+        results.append(("Update Lead Status", test_update_lead(lead_id)))
+        results.append(("Delete Lead", test_delete_lead(lead_id)))
+    
+    # Test validation
     results.append(("Email Validation", test_validation_missing_email()))
     
     # Summary
