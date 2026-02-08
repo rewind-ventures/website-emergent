@@ -671,6 +671,6 @@ def run_all_tests():
         return False
 
 if __name__ == "__main__":
-    # Run focused Resend integration tests as requested
-    success = run_resend_integration_tests()
+    # Run 2MB size enforcement tests as requested
+    success = run_2mb_size_enforcement_tests()
     sys.exit(0 if success else 1)
