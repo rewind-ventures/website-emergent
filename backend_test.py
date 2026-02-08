@@ -399,6 +399,66 @@ def test_missing_consultation_404():
         print(f"❌ Missing consultation test error: {str(e)}")
         return False
 
+def test_image_size_enforcement_3mb(consultation_id):
+    """Test POST /api/consultations/{id}/images/init with 3MB size (should return 400)"""
+    print(f"\n=== Testing Image Size Enforcement: 3MB (should return 400) ===")
+    
+    init_data = {
+        "filename": "large_image.jpg",
+        "size": 3000000,  # 3MB
+        "content_type": "image/jpeg"
+    }
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations/{consultation_id}/images/init", json=init_data)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 400:
+            data = response.json()
+            if "exceeds 2MB limit" in data.get("detail", ""):
+                print("✅ Correctly rejected 3MB image with 400 status and proper error message")
+                return True
+            else:
+                print(f"❌ Got 400 status but wrong error message: {data.get('detail')}")
+                return False
+        else:
+            print(f"❌ Expected 400 for 3MB image, got {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ 3MB size test error: {str(e)}")
+        return False
+
+def test_image_size_enforcement_1mb(consultation_id):
+    """Test POST /api/consultations/{id}/images/init with 1MB size (should return 200)"""
+    print(f"\n=== Testing Image Size Enforcement: 1MB (should return 200) ===")
+    
+    init_data = {
+        "filename": "normal_image.jpg",
+        "size": 1000000,  # 1MB
+        "content_type": "image/jpeg"
+    }
+    
+    try:
+        response = requests.post(f"{BASE_API_URL}/consultations/{consultation_id}/images/init", json=init_data)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "image_id" in data:
+                print("✅ Correctly accepted 1MB image with 200 status and image_id")
+                return True, data["image_id"]
+            else:
+                print("❌ Got 200 status but missing image_id in response")
+                return False, None
+        else:
+            print(f"❌ Expected 200 for 1MB image, got {response.status_code}")
+            return False, None
+    except Exception as e:
+        print(f"❌ 1MB size test error: {str(e)}")
+        return False, None
+
 def run_resend_integration_tests():
     """Run focused tests for Resend email integration without real API key"""
     print("🚀 Testing Resend Email Integration (without real RESEND_API_KEY)")
