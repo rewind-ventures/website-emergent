@@ -776,9 +776,7 @@ export default function Consultation() {
               </CardContent>
             </Card>
 
-            <div style={{ maxWidth: 980, margin: "14px auto 0", color: "rgba(255,255,255,0.55)", fontWeight: 750, fontSize: 13, textAlign: "center" }}>
-              For urgent requests, email us at <b>rewindventures@gmail.com</b>.
-            </div>
+            {/* Removed per request */}
           </div>
         </section>
       </main>
