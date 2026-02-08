@@ -26,8 +26,8 @@ export const MOCK = {
   },
   stats: [
     { k: "50+", v: "Sports venues delivered" },
-    { k: "500+", v: "Admin hours saved" },
-    { k: "30%", v: "Lower client attrition" },
+    { k: "500+", v: "Hours saved" },
+    { k: "30%", v: "Lower attrition" },
   ],
   services: [
     {
