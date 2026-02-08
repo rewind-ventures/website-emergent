@@ -30,7 +30,8 @@ app = FastAPI()
 # Resend email configuration
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "hello@rewind-ventures.com")
-resend.api_key = RESEND_API_KEY
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
 
 
 def _safe_email(s: Optional[str]) -> str:
