@@ -21,7 +21,6 @@ import ContactForm from "@/components/landing/ContactForm";
 import {
   ArrowRight,
   Mail,
-  Phone,
   MapPin,
   Layers,
   Settings2,
