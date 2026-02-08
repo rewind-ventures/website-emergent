@@ -459,6 +459,57 @@ def test_image_size_enforcement_1mb(consultation_id):
         print(f"❌ 1MB size test error: {str(e)}")
         return False, None
 
+def run_2mb_size_enforcement_tests():
+    """Run specific tests for 2MB size enforcement on consultation image init"""
+    print("🚀 Testing 2MB Size Enforcement for Consultation Image Init")
+    print("=" * 70)
+    
+    results = []
+    consultation_id = None
+    
+    # Step 1: Create consultation first
+    print("\n=== Step 1: Create consultation ===")
+    success, consultation_id = test_create_consultation()
+    results.append(("Create consultation", success))
+    
+    if not consultation_id:
+        print("❌ Cannot proceed with size tests - consultation creation failed")
+        return False
+    
+    # Step 2: Test 3MB size (should return 400)
+    print("\n=== Step 2: Test 3MB size (should return 400) ===")
+    size_3mb_success = test_image_size_enforcement_3mb(consultation_id)
+    results.append(("3MB size returns 400", size_3mb_success))
+    
+    # Step 3: Test 1MB size (should return 200)
+    print("\n=== Step 3: Test 1MB size (should return 200) ===")
+    size_1mb_success, image_id = test_image_size_enforcement_1mb(consultation_id)
+    results.append(("1MB size returns 200", size_1mb_success))
+    
+    # Summary
+    print("\n" + "=" * 70)
+    print("📊 2MB SIZE ENFORCEMENT TEST RESULTS")
+    print("=" * 70)
+    
+    passed = 0
+    total = len(results)
+    
+    for test_name, success in results:
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{test_name:<40} {status}")
+        if success:
+            passed += 1
+    
+    print("-" * 70)
+    print(f"Total: {passed}/{total} tests passed")
+    
+    if passed == total:
+        print("🎉 All 2MB size enforcement tests passed! Backend correctly enforces 2MB limit.")
+        return True
+    else:
+        print(f"⚠️ {total - passed} test(s) failed. 2MB size enforcement needs attention.")
+        return False
+
 def run_resend_integration_tests():
     """Run focused tests for Resend email integration without real API key"""
     print("🚀 Testing Resend Email Integration (without real RESEND_API_KEY)")
