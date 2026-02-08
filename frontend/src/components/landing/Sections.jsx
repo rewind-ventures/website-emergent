@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 
 export default function Sections({ data }) {
-  const { brand, services, outcomes, faqs, stats } = data;
+  const { brand, services, outcomes, faqs } = data;
 
   return (
     <>
