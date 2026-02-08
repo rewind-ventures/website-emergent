@@ -158,7 +158,7 @@ async def upload_consultation_image_chunk(
     image_id: str,
     index: int = Query(..., ge=0),
     total: int = Query(..., ge=1, le=10000),
-    chunk: "UploadFile" = None,
+    chunk: UploadFile = File(...),
 ):
     # NOTE: UploadFile imported below to avoid circular import issues with fastapi.
     raise HTTPException(status_code=500, detail="Not implemented")
