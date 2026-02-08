@@ -149,17 +149,65 @@ async def init_consultation_image(consultation_id: str, input: ConsultationImage
 async def upload_consultation_image_chunk(
     consultation_id: str,
     image_id: str,
-    index: int = Query(..., ge=0),
-    total: int = Query(..., ge=1, le=10000),
     chunk: UploadFile = File(...),
+    index: int = Form(...),
+    total: int = Form(...),
 ):
-    # NOTE: UploadFile imported below to avoid circular import issues with fastapi.
-    raise HTTPException(status_code=500, detail="Not implemented")
+    meta = await db.consultation_images.find_one(
+        {"id": image_id, "consultation_id": consultation_id}, {"_id": 0}
+    )
+    if not meta:
+        raise HTTPException(status_code=404, detail="Image upload not initialized")
+
+    data = await chunk.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="Empty chunk")
+
+    # Store chunk in mongo (simple MVP). For production, use object storage.
+    chunk_doc = {
+        "image_id": image_id,
+        "consultation_id": consultation_id,
+        "index": int(index),
+        "total": int(total),
+        "data": data,
+        "size": len(data),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.consultation_image_chunks.insert_one(chunk_doc)
+
+    await db.consultation_images.update_one(
+        {"id": image_id},
+        {"$addToSet": {"chunks": int(index)}, "$set": {"total": int(total)}},
+    )
+
+    return {"ok": True}
 
 
 @api_router.post("/consultations/{consultation_id}/images/{image_id}/complete")
 async def complete_consultation_image_upload(consultation_id: str, image_id: str):
-    raise HTTPException(status_code=500, detail="Not implemented")
+    meta = await db.consultation_images.find_one(
+        {"id": image_id, "consultation_id": consultation_id}, {"_id": 0}
+    )
+    if not meta:
+        raise HTTPException(status_code=404, detail="Image upload not initialized")
+
+    total = int(meta.get("total") or 0)
+    chunks = sorted([int(x) for x in meta.get("chunks", [])])
+    if total <= 0 or len(chunks) < total:
+        raise HTTPException(status_code=400, detail="Upload incomplete")
+
+    await db.consultation_images.update_one(
+        {"id": image_id},
+        {"$set": {"status": "complete", "completed_at": datetime.now(timezone.utc).isoformat()}},
+    )
+
+    # Link image id to consultation
+    await db.consultations.update_one(
+        {"id": consultation_id},
+        {"$addToSet": {"image_ids": image_id}},
+    )
+
+    return {"ok": True}
 
     doc["created_at"] = doc["created_at"].isoformat()
 
