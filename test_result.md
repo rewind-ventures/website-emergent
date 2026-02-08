@@ -120,6 +120,30 @@ backend:
         agent: "testing"
         comment: "✅ ALL TESTS PASSED (7/7): GET /api/ Hello World ✅, POST /api/leads create ✅, GET /api/leads?limit=6 list ✅, PATCH /api/leads/{id} update status ✅, DELETE /api/leads/{id} ✅, GET /api/leads after deletion ✅, POST validation (missing email returns 422) ✅. All endpoints working correctly with proper validation, error handling, and data persistence. Backend API fully functional."
 
+  - task: "Consultation API (create consultation)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ CONSULTATION API TESTED: POST /api/consultations endpoint working correctly. Successfully created consultation with payload containing name, email, company, details, area_sqft, mode, sports array, facility_name, google_maps_url, and source. Returns proper id and created_at timestamp. Validation and data persistence working as expected."
+
+  - task: "Image upload API (init/chunk/complete)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ IMAGE UPLOAD API FULLY TESTED: All image upload endpoints working correctly. (1) POST /api/consultations/{id}/images/init returns image_id ✅ (2) POST /api/consultations/{id}/images/{image_id}/chunk accepts multipart form data with index, total, and file fields - tested with 2 chunks ✅ (3) POST /api/consultations/{id}/images/{image_id}/complete successfully completes upload ✅ (4) 404 error correctly returned for missing consultation_id ✅. Chunked file upload system working properly with MongoDB storage."
+
 frontend:
   - task: "Landing page UI (services tabs, FAQ accordion, contact form)"
     implemented: true
