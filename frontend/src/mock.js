@@ -9,7 +9,6 @@ export const MOCK = {
   },
   nav: [
     { id: "services", label: "Services" },
-    { id: "approach", label: "How we deliver" },
     { id: "proof", label: "Proof" },
     { id: "faq", label: "FAQ" },
     { id: "contact", label: "Contact" },
