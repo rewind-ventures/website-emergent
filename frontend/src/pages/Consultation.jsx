@@ -58,11 +58,11 @@ const schema = z
       .string()
       .refine((v) => !v || !Number.isNaN(Number(v)), "Area must be a number")
       .optional(),
-    facility_name: z.string().min(2, "Please enter the facility/site name"),
+    facility_name: z.string().optional(),
     google_maps_url: z
       .string()
-      .min(8, "Paste a Google Maps link")
-      .refine((v) => v.startsWith("http"), "Please paste a valid URL"),
+      .refine((v) => !v || v.startsWith("http"), "Please paste a valid URL")
+      .optional(),
     mode: z.enum(["single", "multi"]),
     single_sport: z.string().optional(),
     single_courts: z.string().optional(),
