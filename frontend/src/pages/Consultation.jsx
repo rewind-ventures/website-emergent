@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { MOCK } from "@/mock";
+import { submitToGoogleSheets } from "@/lib/googleSheets";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,10 +38,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/sonner";
 
-import { ArrowLeft, ArrowRight, MapPin, Upload } from "lucide-react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 
 const SPORTS = [
   { key: "tennis", label: "Tennis" },
@@ -109,12 +106,7 @@ const schema = z
     }
   });
 
-function bytesToMb(bytes) {
-  return Math.round((bytes / (1024 * 1024)) * 10) / 10;
-}
-
 function normalizeMapsEmbed(url) {
-  // Best-effort: embed works reliably for google.com/maps links.
   if (!url) return "";
   if (!url.includes("google.com/maps")) return "";
   if (url.includes("output=embed")) return url;
@@ -122,50 +114,8 @@ function normalizeMapsEmbed(url) {
   return `${url}${joiner}output=embed`;
 }
 
-async function uploadImageChunked({ consultationId, file, onProgress }) {
-  // 1) init
-  const initRes = await axios.post(`${API}/consultations/${consultationId}/images/init`, {
-    filename: file.name,
-    size: file.size,
-    content_type: file.type || "application/octet-stream",
-  });
-
-  const { image_id: imageId } = initRes.data;
-
-  // 2) chunks
-  const CHUNK_SIZE = 1024 * 1024; // 1MB
-  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-
-  for (let idx = 0; idx < totalChunks; idx += 1) {
-    const start = idx * CHUNK_SIZE;
-    const end = Math.min(start + CHUNK_SIZE, file.size);
-    const blob = file.slice(start, end);
-
-    const form = new FormData();
-    form.append("chunk", blob);
-    form.append("index", String(idx));
-    form.append("total", String(totalChunks));
-
-    await axios.post(
-      `${API}/consultations/${consultationId}/images/${imageId}/chunk`,
-      form,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-
-    if (onProgress) onProgress((idx + 1) / totalChunks);
-  }
-
-  // 3) complete
-  await axios.post(`${API}/consultations/${consultationId}/images/${imageId}/complete`);
-
-  return imageId;
-}
-
 export default function Consultation() {
   const navigate = useNavigate();
-  const [files, setFiles] = useState([]); // {file, progress}
   const [submitting, setSubmitting] = useState(false);
   const [mapsUrl, setMapsUrl] = useState("");
 
@@ -197,101 +147,41 @@ export default function Consultation() {
     return arr;
   }, []);
 
-  const onPickFiles = (evt) => {
-    const picked = Array.from(evt.target.files || []);
-
-    const MAX_MB = 2;
-    const next = [];
-    for (const f of picked) {
-      if (!f.type.startsWith("image/")) {
-        toast.message("Only images allowed", { description: f.name });
-        continue;
-      }
-      if (bytesToMb(f.size) > MAX_MB) {
-        toast.message("Image too large", {
-          description: `${f.name} is ${bytesToMb(f.size)}MB. Max is ${MAX_MB}MB.`,
-        });
-        continue;
-      }
-      next.push({ file: f, progress: 0 });
-    }
-
-    setFiles((prev) => {
-      const merged = [...prev, ...next];
-      return merged.slice(0, 12);
-    });
-
-    evt.target.value = "";
-  };
-
-  const removeFile = (name) => {
-    setFiles((prev) => prev.filter((x) => x.file.name !== name));
-  };
-
   const onSubmit = async (values) => {
-    if (files.length < 4) {
-      toast.message("Upload at least 4 site images", {
-        description: "We need 4 high-quality images from all sides (max 2MB each).",
-      });
-      return;
-    }
-
     setSubmitting(true);
     try {
-      // 1) Create consultation request
-      const payload = {
+      // Prepare sports data
+      const sportsData =
+        values.mode === "single"
+          ? `${values.single_sport}: ${values.single_courts} courts`
+          : (values.multi_sports || [])
+              .map((s) => `${s}: ${values.courts_by_sport?.[s] || 0} courts`)
+              .join(", ");
+
+      const result = await submitToGoogleSheets({
         name: values.name,
         email: values.email,
         company: values.company,
         details: values.details,
-        area_sqft: values.area_sqft ? Number(values.area_sqft) : null,
-        mode: values.mode,
-        sports:
-          values.mode === "single"
-            ? [
-                {
-                  sport: values.single_sport,
-                  courts: Number(values.single_courts),
-                },
-              ]
-            : (values.multi_sports || []).map((s) => ({
-                sport: s,
-                courts: Number(values.courts_by_sport?.[s] || 0),
-              })),
+        area_sqft: values.area_sqft || "",
+        facility_type: values.mode,
+        sports: sportsData,
         facility_name: values.facility_name,
         google_maps_url: values.google_maps_url,
         source: "consultation_form",
-      };
+      }, "consultations");
 
-      const res = await axios.post(`${API}/consultations`, payload);
-      const { id: consultationId } = res.data;
-
-      // 2) Upload images (chunked)
-      for (let i = 0; i < files.length; i += 1) {
-        const entry = files[i];
-        // eslint-disable-next-line no-await-in-loop
-        await uploadImageChunked({
-          consultationId,
-          file: entry.file,
-          onProgress: (p) => {
-            setFiles((prev) => {
-              const clone = [...prev];
-              clone[i] = { ...clone[i], progress: p };
-              return clone;
-            });
-          },
+      if (result.success) {
+        toast.success("Thank you for contacting us", {
+          description: "Your relationship manager will reach out to you soon!",
         });
+
+        form.reset();
+        setMapsUrl("");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        throw new Error(result.message);
       }
-
-      toast.success("Thank you for contacting us", {
-        description:
-          "Your relationship manager will reach out to you soon!",
-      });
-
-      form.reset();
-      setFiles([]);
-      setMapsUrl("");
-      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
       toast.message("Could not submit", {
         description:
@@ -354,7 +244,7 @@ export default function Consultation() {
               <CardHeader>
                 <CardTitle className="rv2-panelTitle">Basic information</CardTitle>
                 <CardDescription className="rv2-panelDesc">
-                  Share the details below and we’ll reach out soon.
+                  Share the details below and we'll reach out soon.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -617,78 +507,6 @@ export default function Consultation() {
 
                     <div className="rv2-sectionHead" style={{ textAlign: "left", marginBottom: 0 }}>
                       <h2 className="rv2-h2" style={{ margin: 0, fontSize: "1.4rem" }}>
-                        Site photos
-                      </h2>
-                      <p className="rv2-p" style={{ marginTop: 8 }}>
-                        Upload at least 4 images (max 2MB each) covering all 4 sides.
-                      </p>
-                    </div>
-
-                    <div className="rv2-panel" style={{ padding: 14 }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <span className="rv2-iconBox" aria-hidden>
-                            <Upload className="h-5 w-5" />
-                          </span>
-                          <div>
-                            <div style={{ fontWeight: 950 }}>Upload images</div>
-                            <div style={{ color: "rgba(255,255,255,0.65)", fontWeight: 700, fontSize: 13 }}>
-                              Minimum 4 images • JPG/PNG/WebP
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <Input
-                            className="rv2-input"
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            onChange={onPickFiles}
-                          />
-                        </div>
-                      </div>
-
-                      {files.length > 0 && (
-                        <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-                          {files.map((f) => (
-                            <div
-                              key={f.file.name}
-                              className="rv2-panel"
-                              style={{ padding: 12, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                              <div style={{ minWidth: 0 }}>
-                                <div style={{ fontWeight: 900, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                  {f.file.name}
-                                </div>
-                                <div style={{ color: "rgba(255,255,255,0.62)", fontWeight: 750, fontSize: 13 }}>
-                                  {bytesToMb(f.file.size)}MB
-                                  {submitting ? ` • ${Math.round((f.progress || 0) * 100)}%` : ""}
-                                </div>
-                                {submitting && (
-                                  <div style={{ height: 6, borderRadius: 999, background: "rgba(255,255,255,0.08)", marginTop: 8, overflow: "hidden" }}>
-                                    <div
-                                      style={{ height: "100%", width: `${Math.round((f.progress || 0) * 100)}%`, background: "rgba(211,255,98,0.9)" }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                className="rv2-btn rv2-btnSecondary"
-                                disabled={submitting}
-                                onClick={() => removeFile(f.file.name)}>
-                                Remove
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <Separator className="rv-sep" />
-
-                    <div className="rv2-sectionHead" style={{ textAlign: "left", marginBottom: 0 }}>
-                      <h2 className="rv2-h2" style={{ margin: 0, fontSize: "1.4rem" }}>
                         Site location
                       </h2>
                       <p className="rv2-p" style={{ marginTop: 8 }}>
@@ -756,7 +574,7 @@ export default function Consultation() {
                       </div>
                     ) : mapsUrl ? (
                       <div className="rv2-panel" style={{ padding: 12, color: "rgba(255,255,255,0.72)" }}>
-                        Preview is available for <b>google.com/maps</b> links. We’ll still record the URL you provided.
+                        Preview is available for <b>google.com/maps</b> links. We'll still record the URL you provided.
                       </div>
                     ) : null}
 
@@ -775,8 +593,6 @@ export default function Consultation() {
                 </Form>
               </CardContent>
             </Card>
-
-            {/* Removed per request */}
           </div>
         </section>
       </main>

@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,9 +18,7 @@ import {
 import { toast } from "@/components/ui/sonner";
 
 import { ArrowRight } from "lucide-react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { submitToGoogleSheets } from "@/lib/googleSheets";
 
 const leadSchema = z.object({
   name: z.string().min(2, "Please enter your name"),
@@ -49,20 +46,23 @@ export default function ContactForm() {
 
   const onSubmit = async (values) => {
     try {
-      await axios.post(`${API}/leads`, {
+      const result = await submitToGoogleSheets({
         name: values.name,
         company: values.company,
         email: values.email,
-        phone: values.phone || null,
-        need: values.need,
+        phone: values.phone || "",
+        message: values.need,
         source: "landing_form",
-      });
+      }, "leads");
 
-      toast.success("Request received", {
-        description: "Submitted successfully. We'll get back to you shortly.",
-      });
-
-      form.reset();
+      if (result.success) {
+        toast.success("Request received", {
+          description: "Submitted successfully. We'll get back to you shortly.",
+        });
+        form.reset();
+      } else {
+        throw new Error(result.message);
+      }
     } catch {
       toast.message("Submission not sent", {
         description: "We couldn't submit right now. Please email us instead.",
