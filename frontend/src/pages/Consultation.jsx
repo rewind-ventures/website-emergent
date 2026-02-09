@@ -539,7 +539,7 @@ export default function Consultation() {
                         name="google_maps_url"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Google Maps link</FormLabel>
+                            <FormLabel>Google Maps link (optional)</FormLabel>
                             <FormControl>
                               <Input
                                 className="rv2-input"
