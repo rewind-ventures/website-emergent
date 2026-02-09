@@ -205,7 +205,7 @@ export default function Sections({ data }) {
               </Badge>
               <h2 className="rv2-h2">Let’s talk about your venue</h2>
               <p className="rv2-p">
-                Reach out by email, phone, or send a message — we’ll get back
+                Reach out by email, or send a message — we’ll get back
                 within 1–2 business days.
               </p>
 
