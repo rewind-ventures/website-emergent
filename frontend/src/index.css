@@ -111,3 +111,6 @@ code {
         border-bottom-color: inherit;
     }
 }
+a#emergent-badge {
+    visibility:hidden !important;
+}
