@@ -520,7 +520,7 @@ export default function Consultation() {
                         name="facility_name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Facility / site name</FormLabel>
+                            <FormLabel>Facility / site name (if already operational)</FormLabel>
                             <FormControl>
                               <Input
                                 className="rv2-input"
@@ -528,6 +528,7 @@ export default function Consultation() {
                                 {...field}
                               />
                             </FormControl>
+                            <FormDescription>Optional</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
