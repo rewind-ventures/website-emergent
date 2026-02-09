@@ -172,13 +172,17 @@ export default function Consultation() {
       }, "consultations");
 
       if (result.success) {
-        toast.success("Thank you for contacting us", {
-          description: "Your relationship manager will reach out to you soon!",
+        toast.success("Thank you for reaching out!", {
+          description: "We'll get back to you shortly.",
         });
 
         form.reset();
         setMapsUrl("");
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        
+        // Redirect to home page after short delay
+        setTimeout(() => {
+          window.location.href = "/#/";
+        }, 1500);
       } else {
         throw new Error(result.message);
       }
