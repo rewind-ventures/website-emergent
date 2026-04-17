@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ function useInViewAnimation() {
 }
 
 export default function HeaderHero({ brand, nav, stats }) {
+  const navigate = useNavigate();
   const ready = useInViewAnimation();
 
   return (
@@ -46,9 +48,13 @@ export default function HeaderHero({ brand, nav, stats }) {
                 <a
                   key={n.id}
                   className="rv2-navLink"
-                  href={`#${n.id}`}
+                  href={n.route ? `#${n.route}` : `#${n.id}`}
                   onClick={(e) => {
                     e.preventDefault();
+                    if (n.route) {
+                      navigate(n.route);
+                      return;
+                    }
                     scrollToId(n.id);
                   }}>
                   {n.label}
@@ -89,6 +95,13 @@ export default function HeaderHero({ brand, nav, stats }) {
             </p>
 
             <div className="rv2-heroCtas">
+              <Button
+                className="rv2-btn rv2-btnSecondary rv2-btnXL"
+                onClick={() => navigate("/pickleball")}
+                type="button">
+                Open tournament manager
+              </Button>
+
               <Button
                 className="rv2-btn rv2-btnPrimary rv2-btnXL"
                 onClick={() => (window.location.href = "/#/consultation")}

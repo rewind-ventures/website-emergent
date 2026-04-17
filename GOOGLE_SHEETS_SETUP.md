@@ -24,7 +24,17 @@ This guide will help you set up Google Sheets as your "database" for form submis
 ## Step 2: Create the Google Apps Script
 
 1. In your Google Sheet, go to **Extensions → Apps Script**
-2. Delete any existing code and paste the following:
+2. Delete any existing code and paste the combined form + tournament handler from:
+
+   ```
+   google-apps-script/rewind-form-and-tournament-handler.gs
+   ```
+
+   This keeps the existing `leads` and `consultations` form submission behavior, and adds tournament actions that create one new Google Sheet per tournament.
+
+### Legacy form-only script
+
+The original form-only script is kept below for reference. Use the combined script above for the tournament manager.
 
 ```javascript
 // Google Apps Script for Rewind Ventures Form Submissions
@@ -152,7 +162,11 @@ Timestamp: ${data.timestamp}
    ```
    REACT_APP_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
    ```
-3. Rebuild your frontend:
+3. The same URL is used by:
+   - Contact form submissions
+   - Consultation form submissions
+   - Pickleball tournament creation, score syncing, and score locking
+4. Rebuild your frontend:
    ```bash
    cd frontend && yarn build
    ```
@@ -162,6 +176,40 @@ Timestamp: ${data.timestamp}
 1. Open your website
 2. Fill out the contact form
 3. Check your Google Sheet - you should see a new row!
+4. Open `/#/pickleball`
+5. Create a tournament - a new Google Sheet should appear in the Google Drive account that deployed the Apps Script
+6. Add teams, generate a draw, submit a score, then refresh the page - the score should remain locked
+
+---
+
+## Tournament Sheets
+
+Each new tournament creates a separate spreadsheet owned by the account that deployed the Apps Script, for example `thepicklepoint@gmail.com`.
+
+Each tournament spreadsheet contains:
+
+| Tab | Purpose |
+|---|---|
+| `Summary` | Tournament name, date, courts, status, updated time |
+| `Teams` | Player/team list and assigned group |
+| `Matches` | Draw, courts, scores, lock status, referee submission metadata |
+| `Standings` | Live standings for all-play-all or each group |
+| `Qualifiers` | Playoff qualifiers once group matches are complete |
+| `_state` | Hidden JSON state used by the website |
+
+### Optional folder placement
+
+By default, tournament sheets are created in the deploying account's My Drive. To force them into a specific folder:
+
+1. Create/open the folder in Google Drive
+2. Copy the folder ID from the URL
+3. In `google-apps-script/rewind-form-and-tournament-handler.gs`, set:
+
+```javascript
+const TOURNAMENT_FOLDER_ID = "YOUR_FOLDER_ID";
+```
+
+4. Redeploy the Apps Script web app
 
 ---
 

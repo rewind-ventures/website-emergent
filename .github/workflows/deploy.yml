@@ -35,6 +35,7 @@ jobs:
         run: yarn build
         env:
           REACT_APP_GOOGLE_SCRIPT_URL: ${{ secrets.REACT_APP_GOOGLE_SCRIPT_URL }}
+          REACT_APP_TOURNAMENT_SCRIPT_URL: ${{ secrets.REACT_APP_TOURNAMENT_SCRIPT_URL }}
 
       - name: Copy CNAME to build
         run: cp CNAME frontend/build/CNAME

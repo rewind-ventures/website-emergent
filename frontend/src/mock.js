@@ -9,6 +9,7 @@ export const MOCK = {
   },
   nav: [
     { id: "services", label: "Services" },
+    { id: "pickleball", label: "Tournament Manager", route: "/pickleball" },
     { id: "proof", label: "Proof" },
     { id: "faq", label: "FAQ" },
     { id: "contact", label: "Contact" },
